@@ -14,9 +14,6 @@ func NewHttpEngine(container framework.Container) (*gin.Engine, error) {
 	// 设置了Engine
 	r.SetContainer(container)
 
-	// 默认注册recovery中间件
-	r.Use(gin.Recovery())
-
 	// 业务绑定路由操作
 	Routes(r)
 	// 返回绑定路由后的Web引擎

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import ViewLogin from '../views/login/index'
+import ViewRegister from '../views/register/index'
 import View404 from '../views/404'
 import ViewContainer from '../views/layout/container'
 import ViewList from '../views/list/index'
@@ -20,7 +21,11 @@ export const constantRoutes = [
         component: ViewLogin,
         hidden: true
     },
-
+    {
+        path: '/register',
+        component: ViewRegister,
+        hidden: true
+    },
     {
         path: '/404',
         component: View404,
