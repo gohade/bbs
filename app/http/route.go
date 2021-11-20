@@ -1,6 +1,7 @@
 package http
 
 import (
+	"bbs/app/http/module/qa"
 	"bbs/app/http/module/user"
 	"github.com/gohade/hade/framework/contract"
 	"github.com/gohade/hade/framework/gin"
@@ -22,6 +23,8 @@ func Routes(r *gin.Engine) {
 		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 
-	// 动态路由定义
+	// 用户模块
 	user.RegisterRoutes(r)
+	// 问答模块
+	qa.RegisterRoutes(r)
 }

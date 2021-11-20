@@ -15,8 +15,14 @@ func RegisterRoutes(r *gin.Engine) error {
 		r.Bind(&user.UserProvider{})
 	}
 
+	// 登录
 	r.POST("/user/login", api.Login)
+	// 登出
 	r.GET("/user/logout", auth.AuthMiddleware(), api.Logout)
+	// 注册
+	r.POST("/user/register", api.Register)
+	// 注册验证
+	r.GET("/user/register/verify", api.Verify)
 
 	return nil
 }
