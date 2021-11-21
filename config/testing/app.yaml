@@ -12,3 +12,11 @@ dev: # 调试模式
         monitor_folder: "" # 监听文件夹地址，为空或者不填默认为AppFolder
     frontend: # 前端调试模式配置
         port: 8071 # 前端监听端口, 默认8071
+
+domain: "http://hadecast.funaio.cn/"
+
+smtp:
+    host: "smtp.gmail.com"
+    port: 587
+    username: env(SMTP_USERNAME)
+    password: env(SMTP_PASSWORD)

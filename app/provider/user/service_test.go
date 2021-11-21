@@ -1,8 +1,8 @@
 package user
 
 import (
-	"context"
 	"bbs/test"
+	"context"
 	"github.com/gohade/hade/framework/contract"
 	"github.com/gohade/hade/framework/provider/config"
 	"github.com/gohade/hade/framework/provider/log"
