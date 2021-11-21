@@ -19,7 +19,7 @@ func (sp *UserProvider) Register(c framework.Container) framework.NewInstance {
 }
 
 func (sp *UserProvider) IsDefer() bool {
-	return false
+	return true
 }
 
 func (sp *UserProvider) Params(c framework.Container) []interface{} {

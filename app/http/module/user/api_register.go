@@ -7,16 +7,26 @@ import (
 	"time"
 )
 
+type registerParam struct {
+	UserName string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required,gte=6"`
+	Email string `json:"email" binding:"required,gte=6"`
+}
+
 // Register 注册
+// @Summary 用户注册
+// @Description 用户注册接口
+// @Accept  json
+// @Produce  json
+// @Tags user
+// @Param registerParam body registerParam true "注册参数"
+// @Success 200 {string} Message "注册成功"
+// @Router /user/register [post]
 func (api *UserApi) Register(c *gin.Context)  {
 	// 验证参数
 	userService := c.MustMake(provider.UserKey).(provider.Service)
-	type Param struct {
-		UserName string `json:"username" binding:"required"`
-		Password string `json:"password" binding:"required,gte=6"`
-		Email string `json:"email" binding:"required,gte=6"`
-	}
-	param := &Param{}
+
+	param := &registerParam{}
 	if err := c.ShouldBind(param); err != nil {
 		c.AbortWithError(404, err); return
 	}
@@ -41,8 +51,6 @@ func (api *UserApi) Register(c *gin.Context)  {
 		c.AbortWithError(500, errors.New("发送电子邮件失败")); return
 	}
 
-	c.ISetOkStatus().IText("操作成功")
-	// 输出
-	c.IJson(map[string]interface{}{"token": userWithToken.Token}); return
+	c.ISetOkStatus().IText("注册成功，请前往邮箱查看邮件"); return
 }
 

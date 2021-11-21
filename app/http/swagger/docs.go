@@ -19,8 +19,8 @@ var doc = `{
         "title": "{{.Title}}",
         "termsOfService": "https://github.com/swaggo/swag",
         "contact": {
-            "name": "yejianfeng1",
-            "email": "yejianfeng"
+            "name": "jianfengye",
+            "email": "jianfengye"
         },
         "license": {
             "name": "Apache 2.0",
@@ -31,50 +31,35 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/demo/demo": {
-            "get": {
-                "description": "获取所有用户",
+        "/user/login": {
+            "post": {
+                "description": "用户登录接口",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "demo"
+                    "user"
                 ],
-                "summary": "获取所有用户",
-                "responses": {
-                    "200": {
-                        "description": "OK",
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "description": "login with param",
+                        "name": "loginParam",
+                        "in": "body",
+                        "required": true,
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/demo.UserDTO"
-                                }
-                            }
+                            "$ref": "#/definitions/user.loginParam"
                         }
                     }
-                }
-            }
-        },
-        "/demo/demo2": {
-            "get": {
-                "description": "获取所有学生,不进行分页",
-                "produces": [
-                    "application/json"
                 ],
-                "tags": [
-                    "demo"
-                ],
-                "summary": "获取所有学生",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "token",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/demo.UserDTO"
-                            }
+                            "type": "string"
                         }
                     }
                 }
@@ -82,13 +67,17 @@ var doc = `{
         }
     },
     "definitions": {
-        "demo.UserDTO": {
+        "user.loginParam": {
             "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
             "properties": {
-                "id": {
-                    "type": "integer"
+                "password": {
+                    "type": "string"
                 },
-                "name": {
+                "username": {
                     "type": "string"
                 }
             }
@@ -120,12 +109,12 @@ type swaggerInfo struct {
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
-	Version:     "1.1",
+	Version:     "1.0",
 	Host:        "",
 	BasePath:    "/",
 	Schemes:     []string{},
-	Title:       "hade",
-	Description: "hade测试",
+	Title:       "hadecast",
+	Description: "hade论坛",
 }
 
 type s struct{}

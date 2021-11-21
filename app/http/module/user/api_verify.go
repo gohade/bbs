@@ -7,6 +7,14 @@ import (
 )
 
 // Verify 代表验证注册信息
+// @Summary 验证注册信息
+// @Description 使用token验证用户注册信息
+// @Accept  json
+// @Produce  json
+// @Tags user
+// @Param token query string true "注册token"
+// @Success 200 {string} Message "注册成功，请进入登录页面"
+// @Router /user/register/verify [get]
 func (api *UserApi) Verify(c *gin.Context)  {
 	// 验证参数
 	userService := c.MustMake(provider.UserKey).(provider.Service)
@@ -28,5 +36,5 @@ func (api *UserApi) Verify(c *gin.Context)  {
 	}
 
 	// 输出
-	c.ISetOkStatus().IText("请重新登录")
+	c.ISetOkStatus().IText("注册成功，请进入登录页面")
 }

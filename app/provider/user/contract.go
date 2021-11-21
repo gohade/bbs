@@ -30,11 +30,11 @@ type Service interface {
 
 // User 代表一个用户，注意这里的用户信息字段在不同接口和参数可能为空
 type User struct {
-    ID int64 // 代表用户id, 只有注册成功之后才有这个id，唯一表示一个用户
-    UserName string
-    Password string
-    Email string
-    Avatar string
-    Token string // token 可以用作
-    CreatedAt time.Time
+    ID int64  `gorm:"column:id;primaryKey"` // 代表用户id, 只有注册成功之后才有这个id，唯一表示一个用户
+    UserName string `gorm:"column:username"`
+    Password string `gorm:"column:password"`
+    Email string  `gorm:"column:email"`
+
+    Token string `gorm:"-"` // token 可以用作
+    CreatedAt time.Time `gorm:"column:created_at"`
 }

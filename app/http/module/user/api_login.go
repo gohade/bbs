@@ -6,15 +6,25 @@ import (
 	"github.com/pkg/errors"
 )
 
+type loginParam struct {
+	UserName string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required,gte=6"`
+}
+
 // Login 代表登录
+// @Summary 用户登录
+// @Description 用户登录接口
+// @Accept  json
+// @Produce  json
+// @Tags user
+// @Param loginParam body loginParam  true "login with param"
+// @Success 200 {string} Token "token"
+// @Router /user/login [post]
 func (api *UserApi) Login(c *gin.Context)  {
 	// 验证参数
 	userService := c.MustMake(provider.UserKey).(provider.Service)
-	type Param struct {
-		UserName string `json:"username" binding:"required"`
-		Password string `json:"password" binding:"required,gte=6"`
-	}
-	param := &Param{}
+
+	param := &loginParam{}
 	if err := c.ShouldBind(param); err != nil {
 		c.AbortWithError(404, err); return
 	}
@@ -33,6 +43,6 @@ func (api *UserApi) Login(c *gin.Context)  {
 	}
 
 	// 输出
-	c.IJson(map[string]interface{}{"token": userWithToken.Token}); return
+	c.ISetOkStatus().IText(userWithToken.Token); return
 }
 
