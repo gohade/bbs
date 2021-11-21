@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <BBSHeader></BBSHeader>
+      <bbs-header></bbs-header>
     </el-header>
     <el-main>
         <router-view></router-view>
@@ -14,7 +14,7 @@ import BBSHeader from './header'
 
 export default {
   components: {
-    BBSHeader
+    'bbs-header': BBSHeader
   },
   methods: {
 
