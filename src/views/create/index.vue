@@ -2,11 +2,11 @@
   <el-row type="flex" justify="center" align="middle">
     <el-col :span="8">
       <el-card class="box-card" shadow="never">
-        <el-form ref="form" :model="question" label-width="80px">
-          <el-form-item label="问题标题">
+        <el-form ref="form" :model="question" >
+          <el-form-item >
             <el-input v-model="question.title"></el-input>
           </el-form-item>
-          <el-form-item label="问题描述">
+          <el-form-item >
             <editor :options="editorOptions"
                     height="500px"
                     initialEditType="wysiwyg"

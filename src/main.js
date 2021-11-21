@@ -11,6 +11,6 @@ Vue.use(ElementUI)
 new Vue({
   el: '#app',  // 绑定id为app的元素
   router: router,
-  store,
+  store: store,
   render: h => h(App) // 将App组建渲染在这个元素中
 })

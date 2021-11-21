@@ -34,7 +34,7 @@ export default {
 
 .header_name {
   float: right;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 400;
   margin: 0 15px 0 0;
   line-height: 34px;
