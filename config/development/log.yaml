@@ -1,5 +1,5 @@
 driver: console
-formatter: text
+formatter: json
 level: trace
 
 #driver: single

@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
-	github.com/gohade/hade v1.0.1-0.20211121152343-004af36d2826
+	github.com/gohade/hade v1.0.0
 	github.com/jianfengye/collection v1.3.2
 	github.com/pkg/errors v0.9.1
 	github.com/smartystreets/goconvey v1.7.2
@@ -14,3 +14,5 @@ require (
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gorm.io/gorm v1.21.16
 )
+
+//replace github.com/gohade/hade => /Users/yejianfeng/Documents/workspace/gohade/hade
