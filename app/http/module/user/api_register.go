@@ -3,7 +3,6 @@ package user
 import (
 	provider "bbs/app/provider/user"
 	"github.com/gohade/hade/framework/gin"
-	"github.com/pkg/errors"
 	"time"
 )
 
@@ -28,7 +27,7 @@ func (api *UserApi) Register(c *gin.Context)  {
 
 	param := &registerParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.AbortWithError(404, err); return
+		c.ISetStatus(404).IText("参数错误"); return
 	}
 
 	// 登录
@@ -41,14 +40,14 @@ func (api *UserApi) Register(c *gin.Context)  {
 	// 注册
 	userWithToken, err := userService.Register(c, model)
 	if err != nil {
-		c.AbortWithError(500, err); return
+		c.ISetStatus(500).IText(err.Error()); return
 	}
 	if userWithToken == nil {
-		c.AbortWithError(500, errors.New("注册失败")); return
+		c.ISetStatus(500).IText("注册失败"); return
 	}
 
 	if err := userService.SendRegisterMail(c, userWithToken); err != nil {
-		c.AbortWithError(500, errors.New("发送电子邮件失败")); return
+		c.ISetStatus(500).IText("发送电子邮件失败"); return
 	}
 
 	c.ISetOkStatus().IText("注册成功，请前往邮箱查看邮件"); return

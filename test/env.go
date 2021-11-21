@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	BasePath = "/Users/yejianfeng/Documents/UGit/bbs/"
+	BasePath = "/Users/yejianfeng/Documents/workspace/gohade/bbs"
 )
 
 func InitBaseContainer() framework.Container {

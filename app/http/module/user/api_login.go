@@ -3,7 +3,6 @@ package user
 import (
 	provider "bbs/app/provider/user"
 	"github.com/gohade/hade/framework/gin"
-	"github.com/pkg/errors"
 )
 
 type loginParam struct {
@@ -26,7 +25,7 @@ func (api *UserApi) Login(c *gin.Context)  {
 
 	param := &loginParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.AbortWithError(404, err); return
+		c.ISetStatus(404).IText("参数错误"); return
 	}
 
 	// 登录
@@ -36,10 +35,10 @@ func (api *UserApi) Login(c *gin.Context)  {
 	}
 	userWithToken, err := userService.Login(c, model)
 	if err != nil {
-		c.AbortWithError(500, err); return
+		c.ISetStatus(500).IText(err.Error()); return
 	}
 	if userWithToken == nil {
-		c.AbortWithError(500, errors.New("用户不存在")); return
+		c.ISetStatus(500).IText("用户不存在"); return
 	}
 
 	// 输出

@@ -2,12 +2,13 @@ package user
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 	"github.com/gohade/hade/framework"
 	"github.com/gohade/hade/framework/contract"
+	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/gomail.v2"
+	"gorm.io/gorm"
 	"math/rand"
 	"time"
 )
@@ -29,6 +30,17 @@ func genToken(n int) string {
 }
 
 func (u *UserService) Register(ctx context.Context, user *User) (*User, error) {
+	// 判断邮箱是否已经注册了
+	ormService := u.container.MustMake(contract.ORMKey).(contract.ORMService)
+	db, err := ormService.GetDB()
+	if err != nil {
+		return nil, err
+	}
+	userDB := &User{}
+	if db.Where(&User{Email: user.Email}).First(userDB).Error != gorm.ErrRecordNotFound {
+		return nil, errors.New("邮箱已注册用户，不能重复注册")
+	}
+
 	// 将请求注册进入redis，保存一天
 	cacheService := u.container.MustMake(contract.CacheKey).(contract.CacheService)
 	token := genToken(10)
@@ -46,11 +58,12 @@ func (u *UserService) SendRegisterMail(ctx context.Context, user *User) error {
 	port := u.configer.GetInt("app.smtp.port")
 	username := u.configer.GetString("app.smtp.username")
 	password := u.configer.GetString("app.smtp.password")
+	from := u.configer.GetString("app.smtp.from")
 	d := gomail.NewDialer(host, port, username, password)
-	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	//d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	m := gomail.NewMessage()
-	m.SetHeader("From", "admin@hade.funaio.com")
+	m.SetHeader("From", from)
 	m.SetAddressHeader("To", user.Email, user.UserName)
 	m.SetHeader("Subject", "感谢您注册我们的hadecast")
 	domain := u.configer.GetString("app.domain")
@@ -76,11 +89,17 @@ func (u *UserService) VerifyRegister(ctx context.Context, token string) (bool, e
 		return false, nil
 	}
 
+	// 判断邮箱是否已经注册了
 	ormService := u.container.MustMake(contract.ORMKey).(contract.ORMService)
 	db, err := ormService.GetDB()
 	if err != nil {
 		return false, err
 	}
+	userDB := &User{}
+	if db.Where(&User{Email: user.Email}).First(userDB).Error != gorm.ErrRecordNotFound {
+		return false, errors.New("邮箱已注册用户，不能重复注册")
+	}
+
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.MinCost)
 	if err != nil {
 		return false, err

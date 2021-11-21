@@ -13,10 +13,11 @@ dev: # 调试模式
     frontend: # 前端调试模式配置
         port: 8071 # 前端监听端口, 默认8071
 
-domain: "http://hadecast.funaio.cn/"
+domain: "http://hadecast.funaio.cn"
 
 smtp:
-    host: "127.0.0.1"
-    port: 3306
-    username: jianfengye
-    password: 123456
+    host: "smtp.126.com"
+    port: 25
+    from: "jianfengye110@126.com"
+    username: "jianfengye110"
+    password: "123456"

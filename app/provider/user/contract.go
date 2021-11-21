@@ -2,6 +2,7 @@ package user
 
 import (
     "context"
+    "encoding/json"
     "time"
 )
 
@@ -37,4 +38,12 @@ type User struct {
 
     Token string `gorm:"-"` // token 可以用作
     CreatedAt time.Time `gorm:"column:created_at"`
+}
+
+func (b *User) MarshalBinary() ([]byte, error) {
+    return json.Marshal(b)
+}
+
+func (b *User) UnmarshalBinary(bt []byte) error {
+    return json.Unmarshal(bt, b)
 }
