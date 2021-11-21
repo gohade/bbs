@@ -7,6 +7,9 @@ import View404 from '../views/404'
 import ViewContainer from '../views/layout/container'
 import ViewList from '../views/list/index'
 import ViewDetail from '../views/detail/index'
+import ViewCreate from '../views/create/index'
+import ViewEdit from '../views/edit/index'
+import ViewAnswerCreate from '../views/answer/create'
 
 Vue.use(Router)
 
@@ -43,7 +46,25 @@ export const constantRoutes = [
             {
                 path: 'detail',
                 component: ViewDetail
+            },
+            {
+                path: 'create',
+                component: ViewCreate
+            },
+            {
+                path: 'edit',
+                component: ViewEdit
             }
+        ]
+    },
+    {
+        path: '/answer',
+        component: ViewContainer,
+        children: [
+            {
+                path: 'create',
+                component: ViewAnswerCreate
+            },
         ]
     },
     // 404 page must be placed at the end !!!

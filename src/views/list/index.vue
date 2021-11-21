@@ -1,43 +1,76 @@
 <template>
   <el-row type="flex" justify="center" align="middle">
     <el-col :span="8">
-      <el-carousel :interval="5000" arrow="always" class="carousel">
-        <el-carousel-item v-for="item in 4" :key="item">
-          <h3>{{ item }}</h3>
-        </el-carousel-item>
-      </el-carousel>
-
-      <el-card class="box-card" shadow="hover">
-        <div slot="header" class="clearfix">
-          <span>卡片名称</span>
+      <div class="infinite-list-wrapper" style="overflow:auto">
+        <ul
+            class="list"
+            v-infinite-scroll="load"
+            infinite-scroll-disabled="disabled">
+            <el-card v-for="i in count" class="box-card" shadow="hover">
+              <div slot="header" class="clearfix">
+          <span>问题标题{{i}}</span>
         </div>
-        <div v-for="o in 4" :key="o" class="text item">
-          {{'列表内容 ' + o }}
-        </div>
-      </el-card>
-
-      <el-card class="box-card" shadow="hover">
-        <div slot="header" class="clearfix">
-          <span>卡片名称</span>
-        </div>
-        <div v-for="o in 4" :key="o" class="text item">
-          {{'列表内容 ' + o }}
-        </div>
-      </el-card>
-
-      <el-card class="box-card" shadow="hover">
-        <div slot="header" class="clearfix">
-          <span>卡片名称</span>
-        </div>
-        <div v-for="o in 4" :key="o" class="text item">
-          {{'列表内容 ' + o }}
-        </div>
-      </el-card>
+              <div class="text item">
+                这个是问题的具体内容，显示前200个字...
+              </div>
+              <div class="bottom clearfix">
+                  <time class="time">2021-10-10 10:10:10 ｜ jianfengye  | 10 回答</time>
+                  <el-button type="text" class="button">去看看</el-button>
+              </div>
+            </el-card>
+        </ul>
+        <p v-if="loading" class="loading_tips">加载中...</p>
+        <p v-if="noMore" class="loading_tips">没有更多了</p>
+      </div>
     </el-col>
   </el-row>
 </template>
 
+<script>
+export default {
+  data () {
+    return {
+      count:10,
+      loading: false
+    }
+  },
+  computed: {
+    noMore () {
+      return this.count >= 20
+    },
+    disabled () {
+      return this.loading || this.noMore
+    }
+  },
+  methods: {
+    load () {
+      this.loading = true
+      setTimeout(() => {
+        this.count += 2
+        this.loading = false
+      }, 2000)
+    }
+  }
+}
+</script>
+
 <style scoped>
+
+.loading_tips {
+  text-align: center;
+  font-size: 13px;
+  color: #999;
+}
+
+.time {
+  font-size: 13px;
+  color: #999;
+}
+
+.bottom {
+  margin-top: 13px;
+  line-height: 12px;
+}
 
 .carousel {
   text-align: center;

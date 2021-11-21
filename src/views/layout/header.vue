@@ -3,13 +3,10 @@
       <el-col :span="8">
         <el-row>
           <el-col :span="8">
-            <el-image
-                style="height: 60px"
-                src="http://tuchuang.funaio.cn/hade/hadecast_logo_v2.png"
-                :fit="fit"></el-image>
+           <div class="hade_title"><a href="/" id="home-link" title="hadecast">hadecast</a></div>
           </el-col>
-          <el-col :span="8" :offset="8">
-            <el-avatar style="margin-right: 10px" icon="el-icon-user-solid"></el-avatar>
+          <el-col class="" :span="8" :offset="8">
+            <div class="header_name">欢迎你，jianfengye | <a href="/" id="home-link" title="hadecast">我要提问</a> </div>
           </el-col>
         </el-row>
       </el-col>
@@ -25,7 +22,39 @@ export default {
 </script>
 
 <style scoped>
+.hade_title {
+  float: left;
+  vertical-align: top;
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0 15px 0 0;
+  line-height: 34px;
+  padding-top: 10px;
+}
 
+.header_name {
+  float: right;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0 15px 0 0;
+  line-height: 34px;
+  padding-top: 10px;
+  padding-top: 10px;
+  background-color: transparent;
+  color: #486e9b;
+  text-decoration: none;
+}
+.header_name > a {
+  background-color: transparent;
+  color: #486e9b;
+  text-decoration: none;
+}
+
+.hade_title > a {
+  background-color: transparent;
+  color: #486e9b;
+  text-decoration: none;
+}
 .el-header {
   background-color: #409EFF;
   text-align: center;

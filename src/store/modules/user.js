@@ -1,6 +1,6 @@
-import { login, logout } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import request from "../../utils/request";
 
 const getDefaultState = () => {
   return {
@@ -32,7 +32,7 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      request("/user/login",{ username: username.trim(), password: password }).then(response => {
         const { token } = response
         commit('SET_TOKEN', token)
         setToken(token)
@@ -46,7 +46,7 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      request("/user/logout", state.token).then(() => {
         removeToken() // must remove  token  first
         resetRouter()
         commit('RESET_STATE')
