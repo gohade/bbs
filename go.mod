@@ -7,6 +7,7 @@ require (
 	github.com/gohade/hade v1.0.0
 	github.com/jianfengye/collection v1.3.2
 	github.com/pkg/errors v0.9.1
+	github.com/smartystreets/goconvey v1.7.2 // indirect
 	github.com/swaggo/swag v1.7.3
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect

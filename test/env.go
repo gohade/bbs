@@ -1,4 +1,4 @@
-package tests
+package test
 
 import (
 	"github.com/gohade/hade/framework"
@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	BasePath = "/Users/yejianfeng/Documents/UGit/coredemo/"
+	BasePath = "/Users/yejianfeng/Documents/UGit/bbs/"
 )
 
 func InitBaseContainer() framework.Container {
