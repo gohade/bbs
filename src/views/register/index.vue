@@ -11,17 +11,17 @@
         <el-form-item prop="email">
           <el-input placeholder="邮箱" prefix-icon="fas fa-user"></el-input>
         </el-form-item>
-        <el-form-item prop="verify_code">
-          <el-row  justify="space-around">
-            <el-col :span="16">
-              <el-input placeholder="验证码" prefix-icon="fas fa-user"></el-input>
-            </el-col>
-            <el-col :span="6" :offset="1" >
-              <el-button class="send_verify_code" type="primary">发送验证码</el-button>
-            </el-col>
-          </el-row>
+<!--        <el-form-item prop="verify_code">-->
+<!--          <el-row  justify="space-around">-->
+<!--            <el-col :span="16">-->
+<!--              <el-input placeholder="验证码" prefix-icon="fas fa-user"></el-input>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6" :offset="1" >-->
+<!--              <el-button class="send_verify_code" type="primary">发送验证码</el-button>-->
+<!--            </el-col>-->
+<!--          </el-row>-->
 
-        </el-form-item>
+<!--        </el-form-item>-->
         <el-form-item prop="password">
           <el-input
               placeholder="密码"

@@ -35,9 +35,9 @@ type User struct {
     UserName string `gorm:"column:username"`
     Password string `gorm:"column:password"`
     Email string  `gorm:"column:email"`
-
-    Token string `gorm:"-"` // token 可以用作
     CreatedAt time.Time `gorm:"column:created_at"`
+
+    Token string `gorm:"-"` // token 可以用作注册token或者登录token
 }
 
 func (b *User) MarshalBinary() ([]byte, error) {
