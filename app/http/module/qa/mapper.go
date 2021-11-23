@@ -3,44 +3,25 @@ package qa
 import (
 	"bbs/app/http/module/user"
 	"bbs/app/provider/qa"
-	"github.com/jianfengye/collection"
 )
 
-// 获取answer的树形结构
-func getAnswerChildren(dto *AnswerDTO, answers []*qa.Answer) {
-	if dto == nil {
-		return
+func ConvertAnswerToDTO(answer *qa.Answer) *AnswerDTO {
+	if answer == nil {
+		return nil
 	}
-	for _, answer := range answers {
-		if dto.ID == answer.ParentID {
-			if dto.Children == nil {
-				dto.Children = []*AnswerDTO{}
-			}
-
-			childAnswerDTO :=  &AnswerDTO{
-				ID:        answer.ID,
-				Content:   answer.Content,
-				AuthorID:  answer.AuthorID,
-				CreatedAt: answer.CreatedAt,
-				UpdatedAt: answer.UpdatedAt,
-				Author:    user.ConvertUserToDTO(answer.Author),
-				Children:  nil,
-			}
-
-			getAnswerChildren(childAnswerDTO, answers)
-
-			dto.Children = append(dto.Children, childAnswerDTO)
+	author := user.ConvertUserToDTO(answer.Author)
+	if author == nil {
+		author = &user.UserDTO{
+			ID:        answer.AuthorID,
 		}
 	}
-
-
-	if len(dto.Children) > 0 {
-		childColl := collection.NewObjPointCollection(dto.Children)
-		objs := []*AnswerDTO{}
-		childColl.SortByDesc("UpdatedAt").ToObjs(&objs)
-		dto.Children = objs
+	return &AnswerDTO{
+		ID:        answer.ID,
+		Content:   answer.Content,
+		CreatedAt: answer.CreatedAt,
+		UpdatedAt: answer.UpdatedAt,
+		Author:   author,
 	}
-	return
 }
 
 // ConvertAnswersToDTO 将answers转化为带有tree结构的AnswerDTO
@@ -49,12 +30,11 @@ func ConvertAnswersToDTO(answers []*qa.Answer) []*AnswerDTO {
 		return nil
 	}
 
-	answerZero := &AnswerDTO{
-		ID:        0,
-		Children:  nil,
+	ret := make([]*AnswerDTO, 0, len(answers))
+	for _, answer := range answers {
+		ret = append(ret, ConvertAnswerToDTO(answer))
 	}
-	getAnswerChildren(answerZero, answers)
-	return answerZero.Children
+	return ret
 }
 
 // ConvertQuestionToDTO 将question转换为DTO
@@ -62,14 +42,32 @@ func ConvertQuestionToDTO(question *qa.Question) *QuestionDTO {
 	if question == nil {
 		return nil
 	}
+	author := user.ConvertUserToDTO(question.Author)
+	if author == nil {
+		author = &user.UserDTO{
+			ID:        question.AuthorID,
+		}
+	}
 	return &QuestionDTO{
 		ID:        question.ID,
 		Title:     question.Title,
 		Context:   question.Context,
-		AuthorID:  question.AuthorID,
 		CreatedAt: question.CreatedAt,
 		UpdatedAt: question.UpdatedAt,
-		Author:    user.ConvertUserToDTO(question.Author),
+		Author:    author,
 		Answers:   ConvertAnswersToDTO(question.Answers),
 	}
 }
+
+// ConvertQuestionsToDTO 将questions转换为DTO
+func ConvertQuestionsToDTO(questions []*qa.Question) []*QuestionDTO {
+	if questions == nil {
+		return nil
+	}
+	ret := make([]*QuestionDTO, 0, len(questions))
+	for _, question := range questions {
+		ret = append(ret, ConvertQuestionToDTO(question))
+	}
+	return ret
+}
+

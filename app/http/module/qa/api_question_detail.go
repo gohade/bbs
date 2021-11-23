@@ -5,28 +5,35 @@ import (
 	"github.com/gohade/hade/framework/gin"
 )
 
-// QuestionDetail 代表获取问题详情
+// QuestionDetail 获取问题详情
+// @Summary 获取问题详细
+// @Description 获取问题详情，包括问题的所有回答
+// @Accept  json
+// @Produce  json
+// @Tags qa
+// @Param id query int true "问题id"
+// @Success 200 {string} Msg "操作成功"
+// @Router /question/detail [get]
 func (api *QAApi) QuestionDetail(c *gin.Context)  {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
-	type Param struct {
-		ID int64 `json:"id" binding:"required"`
-	}
-	param := &Param{}
-	if err := c.ShouldBind(param); err != nil {
-		c.AbortWithError(404, err); return
+	id, exist := c.DefaultQueryInt64("id", 0)
+	if !exist {
+		c.ISetStatus(404).IText("参数错误"); return
 	}
 
-	question, err := qaService.GetQuestion(c, param.ID)
+	question, err := qaService.GetQuestion(c, id)
 	if err != nil {
-		c.AbortWithError(500, err); return
+		c.ISetStatus(500).IText(err.Error()); return
 	}
 
 	if err := qaService.QuestionLoadAuthor(c, question); err != nil {
-		c.AbortWithError(500, err); return
+		c.ISetStatus(500).IText(err.Error()); return
 	}
 	if err := qaService.QuestionLoadAnswers(c, question); err != nil {
-		c.AbortWithError(500, err); return
+		c.ISetStatus(500).IText(err.Error()); return
 	}
 
-	c.ISetOkStatus().IJson(question)
+	questionDTO := ConvertQuestionToDTO(question)
+
+	c.ISetOkStatus().IJson(questionDTO)
 }

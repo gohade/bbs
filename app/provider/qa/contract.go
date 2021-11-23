@@ -32,6 +32,8 @@ type Service interface {
     // PostAnswer 上传某个回答
     // ctx必须带操作人信息
     PostAnswer(ctx context.Context, answer *Answer) error
+    // GetAnswer 获取回答
+    GetAnswer(ctx context.Context, answerID int64)(*Answer, error)
 
     // DeleteQuestion 删除问题，同时删除对应的回答
     // ctx必须带操作人信息
@@ -76,7 +78,6 @@ type Answer struct {
     ID int64
     QuestionID int64
     Content string
-    ParentID int64
     AuthorID int64
     CreatedAt time.Time
     UpdatedAt time.Time

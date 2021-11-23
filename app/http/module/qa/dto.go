@@ -10,7 +10,6 @@ type QuestionDTO struct {
 	ID int64
 	Title string
 	Context string
-	AuthorID int64
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
@@ -22,10 +21,8 @@ type QuestionDTO struct {
 type AnswerDTO struct {
 	ID int64
 	Content string
-	AuthorID int64
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
 	Author *user.UserDTO
-	Children []*AnswerDTO
 }

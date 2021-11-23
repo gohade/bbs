@@ -4,36 +4,40 @@ import (
 	"bbs/app/http/middleware/auth"
 	provider "bbs/app/provider/qa"
 	"github.com/gohade/hade/framework/gin"
-	"github.com/pkg/errors"
 )
 
-// QuestionDelete 代表获取问题详情
+// QuestionDelete 删除问题
+// @Summary 删除问题
+// @Description 删除问题，同时删除问题中的所有答案
+// @Accept  json
+// @Produce  json
+// @Tags qa
+// @Param id query int true "删除id"
+// @Success 200 {string} Msg "操作成功"
+// @Router /question/delete [get]
 func (api *QAApi) QuestionDelete (c *gin.Context)  {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
-	type Param struct {
-		ID int64 `json:"id" binding:"required"`
-	}
-	param := &Param{}
-	if err := c.ShouldBind(param); err != nil {
-		c.AbortWithError(404, err); return
+	id, exist := c.DefaultQueryInt64("id", 0)
+	if !exist  {
+		c.ISetStatus(404).IText("参数错误"); return
 	}
 
-	question, err := qaService.GetQuestion(c, param.ID)
+	question, err := qaService.GetQuestion(c, id)
 	if err != nil {
-		c.AbortWithError(500, err); return
+		c.ISetStatus(500).IText(err.Error()); return
 	}
 	if question == nil {
-		c.AbortWithError(500, errors.New("问题不存在")); return
+		c.ISetStatus(500).IText("问题不存在"); return
 	}
 
 	user := auth.GetAuthUser(c)
 	if user.ID != question.AuthorID {
-		c.AbortWithError(500, errors.New("无权限操作")); return
+		c.ISetStatus(500).IText("无权限操作"); return
 	}
 
 	ctx := provider.ContextWithUserID(c, user.ID)
 	if err := qaService.DeleteQuestion(ctx, question.ID); err != nil {
-		c.AbortWithError(500, err); return
+		c.ISetStatus(500).IText(err.Error()); return
 	}
-	c.ISetOkStatus().IJson(question)
+	c.ISetOkStatus().IText("操作成功")
 }
