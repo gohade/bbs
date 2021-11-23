@@ -33,10 +33,6 @@ func (api *UserApi) Register(c *gin.Context)  {
 		c.ISetStatus(404).IText("参数错误"); return
 	}
 
-	logger.Info(c, "获取参数", map[string]interface{}{
-		"param": param,
-	})
-
 	// 登录
 	model := &provider.User{
 		UserName:  param.UserName,

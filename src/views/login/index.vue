@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     handleLogin() {
-      this.$store.dispatch('/user/login', param).then(() => {
+      this.$store.dispatch('/user/login', this.model).then(() => {
         this.$router.push({ path: this.redirect || '/' })
       }).catch(() => {
       })
