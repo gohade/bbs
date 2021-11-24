@@ -12,7 +12,7 @@ func ConvertAnswerToDTO(answer *qa.Answer) *AnswerDTO {
 	author := user.ConvertUserToDTO(answer.Author)
 	if author == nil {
 		author = &user.UserDTO{
-			ID:        answer.AuthorID,
+			ID: answer.AuthorID,
 		}
 	}
 	return &AnswerDTO{
@@ -20,7 +20,7 @@ func ConvertAnswerToDTO(answer *qa.Answer) *AnswerDTO {
 		Content:   answer.Content,
 		CreatedAt: answer.CreatedAt,
 		UpdatedAt: answer.UpdatedAt,
-		Author:   author,
+		Author:    author,
 	}
 }
 
@@ -45,7 +45,7 @@ func ConvertQuestionToDTO(question *qa.Question) *QuestionDTO {
 	author := user.ConvertUserToDTO(question.Author)
 	if author == nil {
 		author = &user.UserDTO{
-			ID:        question.AuthorID,
+			ID: question.AuthorID,
 		}
 	}
 	return &QuestionDTO{
@@ -70,4 +70,3 @@ func ConvertQuestionsToDTO(questions []*qa.Question) []*QuestionDTO {
 	}
 	return ret
 }
-

@@ -5,7 +5,7 @@ import (
 	"github.com/gohade/hade/framework/gin"
 )
 
-type QAApi struct {}
+type QAApi struct{}
 
 // RegisterRoutes 注册路由
 func RegisterRoutes(r *gin.Engine) error {
@@ -31,4 +31,3 @@ func RegisterRoutes(r *gin.Engine) error {
 
 	return nil
 }
-

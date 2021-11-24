@@ -24,5 +24,5 @@
 package http
 
 import (
-    _ "bbs/app/http/swagger"
+	_ "bbs/app/http/swagger"
 )

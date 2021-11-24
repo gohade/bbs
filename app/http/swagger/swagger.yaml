@@ -7,8 +7,8 @@ definitions:
       username:
         type: string
     required:
-    - password
-    - username
+      - password
+      - username
     type: object
   user.registerParam:
     properties:
@@ -19,9 +19,9 @@ definitions:
       username:
         type: string
     required:
-    - email
-    - password
-    - username
+      - email
+      - password
+      - username
     type: object
 info:
   contact:
@@ -38,17 +38,17 @@ paths:
   /user/login:
     post:
       consumes:
-      - application/json
+        - application/json
       description: 用户登录接口
       parameters:
-      - description: login with param
-        in: body
-        name: loginParam
-        required: true
-        schema:
-          $ref: '#/definitions/user.loginParam'
+        - description: login with param
+          in: body
+          name: loginParam
+          required: true
+          schema:
+            $ref: '#/definitions/user.loginParam'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: token
@@ -56,14 +56,14 @@ paths:
             type: string
       summary: 用户登录
       tags:
-      - user
+        - user
   /user/logout:
     get:
       consumes:
-      - application/json
+        - application/json
       description: 调用表示用户登出
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: 用户登出成功
@@ -71,21 +71,21 @@ paths:
             type: string
       summary: 用户登出
       tags:
-      - user
+        - user
   /user/register:
     post:
       consumes:
-      - application/json
+        - application/json
       description: 用户注册接口
       parameters:
-      - description: 注册参数
-        in: body
-        name: registerParam
-        required: true
-        schema:
-          $ref: '#/definitions/user.registerParam'
+        - description: 注册参数
+          in: body
+          name: registerParam
+          required: true
+          schema:
+            $ref: '#/definitions/user.registerParam'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: 注册成功
@@ -93,20 +93,20 @@ paths:
             type: string
       summary: 用户注册
       tags:
-      - user
+        - user
   /user/register/verify:
     get:
       consumes:
-      - application/json
+        - application/json
       description: 使用token验证用户注册信息
       parameters:
-      - description: 注册token
-        in: query
-        name: token
-        required: true
-        type: string
+        - description: 注册token
+          in: query
+          name: token
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: 注册成功，请进入登录页面
@@ -114,7 +114,7 @@ paths:
             type: string
       summary: 验证注册信息
       tags:
-      - user
+        - user
 securityDefinitions:
   ApiKeyAuth:
     in: header

@@ -43,9 +43,9 @@ func Test_UserRegisterLogin(t *testing.T) {
 	ctx := context.Background()
 
 	user1 := &User{
-		UserName:  "jianfengye",
-		Password:  "123456",
-		Email:     "jianfengye110@gmail.com",
+		UserName: "jianfengye",
+		Password: "123456",
+		Email:    "jianfengye110@gmail.com",
 	}
 
 	Convey("正常流程", t, func() {

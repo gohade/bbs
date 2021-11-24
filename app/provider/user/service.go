@@ -15,8 +15,8 @@ import (
 
 type UserService struct {
 	container framework.Container
-	logger contract.Log
-	configer contract.Config
+	logger    contract.Log
+	configer  contract.Config
 }
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -47,7 +47,7 @@ func (u *UserService) Register(ctx context.Context, user *User) (*User, error) {
 	user.Token = token
 
 	key := fmt.Sprintf("user:register:%v", user.Token)
-	if err := cacheService.SetObj(ctx, key, user, 24 * time.Hour); err != nil {
+	if err := cacheService.SetObj(ctx, key, user, 24*time.Hour); err != nil {
 		return nil, err
 	}
 	return user, nil
@@ -133,7 +133,7 @@ func (u *UserService) Login(ctx context.Context, user *User) (*User, error) {
 	cacheService := u.container.MustMake(contract.CacheKey).(contract.CacheService)
 	token := genToken(10)
 	key := fmt.Sprintf("session:%v", token)
-	if err := cacheService.SetObj(ctx, key, userDB, 24 * time.Hour); err != nil {
+	if err := cacheService.SetObj(ctx, key, userDB, 24*time.Hour); err != nil {
 		return nil, err
 	}
 
@@ -143,7 +143,7 @@ func (u *UserService) Login(ctx context.Context, user *User) (*User, error) {
 
 func (u *UserService) Logout(ctx context.Context, user *User) error {
 	cacheService := u.container.MustMake(contract.CacheKey).(contract.CacheService)
-	userSession, err :=  u.VerifyLogin(ctx, user.Token)
+	userSession, err := u.VerifyLogin(ctx, user.Token)
 	// 不需要做任何操作
 	if err != nil || userSession.UserName != user.UserName {
 		return nil
@@ -171,4 +171,3 @@ func NewUserService(params ...interface{}) (interface{}, error) {
 	configer := container.MustMake(contract.ConfigKey).(contract.Config)
 	return &UserService{container: container, logger: logger, configer: configer}, nil
 }
-

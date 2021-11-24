@@ -14,23 +14,27 @@ import (
 // @Param id query int true "问题id"
 // @Success 200 {string} Msg "操作成功"
 // @Router /question/detail [get]
-func (api *QAApi) QuestionDetail(c *gin.Context)  {
+func (api *QAApi) QuestionDetail(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
 	id, exist := c.DefaultQueryInt64("id", 0)
 	if !exist {
-		c.ISetStatus(404).IText("参数错误"); return
+		c.ISetStatus(404).IText("参数错误")
+		return
 	}
 
 	question, err := qaService.GetQuestion(c, id)
 	if err != nil {
-		c.ISetStatus(500).IText(err.Error()); return
+		c.ISetStatus(500).IText(err.Error())
+		return
 	}
 
 	if err := qaService.QuestionLoadAuthor(c, question); err != nil {
-		c.ISetStatus(500).IText(err.Error()); return
+		c.ISetStatus(500).IText(err.Error())
+		return
 	}
 	if err := qaService.QuestionLoadAnswers(c, question); err != nil {
-		c.ISetStatus(500).IText(err.Error()); return
+		c.ISetStatus(500).IText(err.Error())
+		return
 	}
 
 	questionDTO := ConvertQuestionToDTO(question)

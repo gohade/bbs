@@ -15,29 +15,34 @@ import (
 // @Param id query int true "删除id"
 // @Success 200 {string} Msg "操作成功"
 // @Router /question/delete [get]
-func (api *QAApi) QuestionDelete (c *gin.Context)  {
+func (api *QAApi) QuestionDelete(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
 	id, exist := c.DefaultQueryInt64("id", 0)
-	if !exist  {
-		c.ISetStatus(404).IText("参数错误"); return
+	if !exist {
+		c.ISetStatus(404).IText("参数错误")
+		return
 	}
 
 	question, err := qaService.GetQuestion(c, id)
 	if err != nil {
-		c.ISetStatus(500).IText(err.Error()); return
+		c.ISetStatus(500).IText(err.Error())
+		return
 	}
 	if question == nil {
-		c.ISetStatus(500).IText("问题不存在"); return
+		c.ISetStatus(500).IText("问题不存在")
+		return
 	}
 
 	user := auth.GetAuthUser(c)
 	if user.ID != question.AuthorID {
-		c.ISetStatus(500).IText("无权限操作"); return
+		c.ISetStatus(500).IText("无权限操作")
+		return
 	}
 
 	ctx := provider.ContextWithUserID(c, user.ID)
 	if err := qaService.DeleteQuestion(ctx, question.ID); err != nil {
-		c.ISetStatus(500).IText(err.Error()); return
+		c.ISetStatus(500).IText(err.Error())
+		return
 	}
 	c.ISetOkStatus().IText("操作成功")
 }

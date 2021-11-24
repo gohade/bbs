@@ -29,4 +29,3 @@ func (sp *UserProvider) Params(c framework.Container) []interface{} {
 func (sp *UserProvider) Boot(c framework.Container) error {
 	return nil
 }
-

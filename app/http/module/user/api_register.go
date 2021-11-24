@@ -11,7 +11,7 @@ import (
 type registerParam struct {
 	UserName string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required,gte=6"`
-	Email string `json:"email" binding:"required,gte=6"`
+	Email    string `json:"email" binding:"required,gte=6"`
 }
 
 // Register 注册
@@ -23,21 +23,22 @@ type registerParam struct {
 // @Param registerParam body registerParam true "注册参数"
 // @Success 200 {string} Message "注册成功"
 // @Router /user/register [post]
-func (api *UserApi) Register(c *gin.Context)  {
+func (api *UserApi) Register(c *gin.Context) {
 	// 验证参数
 	userService := c.MustMake(provider.UserKey).(provider.Service)
 	logger := c.MustMake(contract.LogKey).(contract.Log)
 
 	param := &registerParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.ISetStatus(404).IText("参数错误"); return
+		c.ISetStatus(404).IText("参数错误")
+		return
 	}
 
 	// 登录
 	model := &provider.User{
 		UserName:  param.UserName,
 		Password:  param.Password,
-		Email: param.Email,
+		Email:     param.Email,
 		CreatedAt: time.Now(),
 	}
 	// 注册
@@ -46,17 +47,20 @@ func (api *UserApi) Register(c *gin.Context)  {
 		logger.Error(c, err.Error(), map[string]interface{}{
 			"stack": fmt.Sprintf("%+v", err),
 		})
-		c.ISetStatus(500).IText(err.Error()); return
+		c.ISetStatus(500).IText(err.Error())
+		return
 	}
 	if userWithToken == nil {
-		c.ISetStatus(500).IText("注册失败"); return
+		c.ISetStatus(500).IText("注册失败")
+		return
 	}
 
 	if err := userService.SendRegisterMail(c, userWithToken); err != nil {
 
-		c.ISetStatus(500).IText("发送电子邮件失败"); return
+		c.ISetStatus(500).IText("发送电子邮件失败")
+		return
 	}
 
-	c.ISetOkStatus().IText("注册成功，请前往邮箱查看邮件"); return
+	c.ISetOkStatus().IText("注册成功，请前往邮箱查看邮件")
+	return
 }
-
