@@ -40,10 +40,12 @@ type User struct {
 	Token string `gorm:"-"` // token 可以用作注册token或者登录token
 }
 
+// MarshalBinary 实现BinaryMarshaler 接口
 func (b *User) MarshalBinary() ([]byte, error) {
 	return json.Marshal(b)
 }
 
+// UnmarshalBinary 实现 BinaryUnMarshaler 接口
 func (b *User) UnmarshalBinary(bt []byte) error {
 	return json.Unmarshal(bt, b)
 }

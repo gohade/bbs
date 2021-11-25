@@ -5,7 +5,6 @@ go 1.15
 require (
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
 	github.com/gohade/hade v1.0.1
-	github.com/jianfengye/collection v1.3.2
 	github.com/pkg/errors v0.9.1
 	github.com/smartystreets/goconvey v1.7.2
 	github.com/swaggo/swag v1.7.3

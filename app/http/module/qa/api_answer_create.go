@@ -40,8 +40,7 @@ func (api *QAApi) AnswerCreate(c *gin.Context) {
 		Content:    param.Content,
 		AuthorID:   user.ID,
 	}
-	ctx := provider.ContextWithUserID(c, user.ID)
-	if err := qaService.PostAnswer(ctx, answer); err != nil {
+	if err := qaService.PostAnswer(c, answer); err != nil {
 		c.ISetStatus(500).IText(err.Error())
 		return
 	}
