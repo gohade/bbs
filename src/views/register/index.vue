@@ -72,12 +72,8 @@ export default {
         const msg = response.data
         if (response.status === 200) {
           this.$message.success(msg);
-        } else {
-          this.$message.error(msg);
         }
-      }).catch(e){
-        this.$message.error(e)
-      }
+      })
     }
   }
 };
