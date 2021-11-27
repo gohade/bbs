@@ -27,47 +27,94 @@ func (q *QaService) GetQuestions(ctx context.Context, pager *Pager) ([]*Question
 }
 
 func (q *QaService) GetQuestion(ctx context.Context, questionID int64) (*Question, error) {
-	panic("implement me")
+	question := &Question{}
+	if err := q.ormDB.WithContext(ctx).First(question, questionID).Error; err != nil {
+		return nil, err
+	}
+	return question, nil
 }
 
 func (q *QaService) PostQuestion(ctx context.Context, question *Question) error {
-	panic("implement me")
+	if err := q.ormDB.WithContext(ctx).Create(question).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (q *QaService) QuestionLoadAuthor(ctx context.Context, question *Question) error {
-	panic("implement me")
+	if err := q.ormDB.WithContext(ctx).Preload("Author").First(question).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (q *QaService) QuestionsLoadAuthor(ctx context.Context, questions []*Question) error {
-	panic("implement me")
+	if err := q.ormDB.WithContext(ctx).Preload("Author").Find(questions).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (q *QaService) QuestionLoadAnswers(ctx context.Context, question *Question) error {
-	panic("implement me")
+	if err := q.ormDB.WithContext(ctx).Preload("Answers").First(question).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (q *QaService) QuestionsLoadAnswers(ctx context.Context, questions []*Question) error {
-	panic("implement me")
+	if err := q.ormDB.WithContext(ctx).Preload("Answers").Find(questions).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (q *QaService) PostAnswer(ctx context.Context, answer *Answer) error {
-	panic("implement me")
+	if err := q.ormDB.WithContext(ctx).Preload("Question").First(answer).Error; err != nil {
+		return err
+	}
+	if answer.Question == nil {
+		return errors.New("问题不存在")
+	}
+	if err := q.ormDB.WithContext(ctx).Create(answer).Error; err != nil {
+		return err
+	}
+	answer.Question.AnswerNum = answer.Question.AnswerNum + 1
+	if err := q.ormDB.WithContext(ctx).Save(answer.Question).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (q *QaService) GetAnswer(ctx context.Context, answerID int64) (*Answer, error) {
-	panic("implement me")
+	answer := &Answer{ID: answerID}
+	if err := q.ormDB.WithContext(ctx).First(answer).Error; err != nil {
+		return nil, err
+	}
+	return answer, nil
 }
 
 func (q *QaService) DeleteQuestion(ctx context.Context, questionID int64) error {
-	panic("implement me")
+	question := &Question{ID: questionID}
+	if err := q.ormDB.WithContext(ctx).Delete(question).Error; err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
 }
 
 func (q *QaService) DeleteAnswer(ctx context.Context, answerID int64) error {
-	panic("implement me")
+	answer := &Answer{ID: answerID}
+	if err := q.ormDB.WithContext(ctx).Delete(answer).Error; err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
 }
 
 func (q *QaService) UpdateQuestion(ctx context.Context, question *Question) error {
-	panic("implement me")
+	if err := q.ormDB.WithContext(ctx).Save(question).Error; err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
 }
 
 func NewQaService(params ...interface{}) (interface{}, error) {

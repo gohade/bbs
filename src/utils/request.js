@@ -25,11 +25,14 @@ service.interceptors.response.use(
     response => {
         // 判断http status是否为200
         if (response.status !== 200) {
-            Message({
-                message: "请求错误",
-                type: 'error',
-                duration: 5 * 1000
-            })
+            const data = response.data
+            if (typeof data == 'string') {
+                Message({
+                    message: data,
+                    type: 'error',
+                    duration: 5 * 1000
+                })
+            }
         }
     },
     error => {
