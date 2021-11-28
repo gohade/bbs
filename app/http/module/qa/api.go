@@ -1,6 +1,7 @@
 package qa
 
 import (
+	"bbs/app/http/middleware/auth"
 	"bbs/app/provider/qa"
 	"github.com/gohade/hade/framework/gin"
 )
@@ -13,21 +14,26 @@ func RegisterRoutes(r *gin.Engine) error {
 	if !r.IsBind(qa.QaKey) {
 		r.Bind(&qa.QaProvider{})
 	}
-
-	// 问题列表
-	r.GET("/question/list", api.QuestionList)
-	// 问题详情
-	r.GET("/question/detail", api.QuestionDetail)
-	// 创建问题
-	r.POST("/question/create", api.QuestionCreate)
-	// 删除问题
-	r.POST("/question/delete", api.QuestionDelete)
-	// 更新问题
-	r.POST("/question/edit", api.QuestionEdit)
-	// 创建回答
-	r.POST("/answer/create", api.AnswerCreate)
-	// 删除回答
-	r.POST("/answer/delete", api.AnswerDelete)
+	questionApi := r.Group("/question", auth.AuthMiddleware())
+	{
+		// 问题列表
+		questionApi.GET("/list", api.QuestionList)
+		// 问题详情
+		questionApi.GET("/detail", api.QuestionDetail)
+		// 创建问题
+		questionApi.POST("/create", api.QuestionCreate)
+		// 删除问题
+		questionApi.POST("/delete", api.QuestionDelete)
+		// 更新问题
+		questionApi.POST("/edit", api.QuestionEdit)
+	}
+	answerApi := r.Group("/answer", auth.AuthMiddleware())
+	{
+		// 创建回答
+		answerApi.POST("/create", api.AnswerCreate)
+		// 删除回答
+		answerApi.POST("/delete", api.AnswerDelete)
+	}
 
 	return nil
 }

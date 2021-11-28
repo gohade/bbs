@@ -17,7 +17,7 @@ type loginParam struct {
 // @Produce  json
 // @Tags user
 // @Param loginParam body loginParam  true "login with param"
-// @Success 200 {string} Token "token"
+// @Success 200 string Token "token"
 // @Router /user/login [post]
 func (api *UserApi) Login(c *gin.Context) {
 	// 验证参数
@@ -25,7 +25,7 @@ func (api *UserApi) Login(c *gin.Context) {
 
 	param := &loginParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.ISetStatus(404).IText("参数错误")
+		c.ISetStatus(400).IText("参数错误")
 		return
 	}
 

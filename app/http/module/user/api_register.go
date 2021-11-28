@@ -30,7 +30,7 @@ func (api *UserApi) Register(c *gin.Context) {
 
 	param := &registerParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.ISetStatus(404).IText("参数错误")
+		c.ISetStatus(400).IText("参数错误")
 		return
 	}
 

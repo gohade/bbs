@@ -140,6 +140,9 @@ func (u *UserService) Login(ctx context.Context, user *User) (*User, error) {
 
 	userDB := &User{}
 	if err := db.Where("username=?", user.UserName).First(userDB).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
 		return nil, err
 	}
 
