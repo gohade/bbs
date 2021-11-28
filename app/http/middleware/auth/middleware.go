@@ -8,7 +8,7 @@ import (
 // AuthMiddleware 登录中间件
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token, err := c.Cookie("token")
+		token, err := c.Cookie("hade_bbs")
 		if err != nil || token == "" {
 			c.ISetStatus(401).IText("请登录后操作")
 			return

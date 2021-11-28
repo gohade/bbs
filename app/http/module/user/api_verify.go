@@ -19,7 +19,7 @@ func (api *UserApi) Verify(c *gin.Context) {
 	userService := c.MustMake(provider.UserKey).(provider.Service)
 	token := c.Query("token")
 	if token == "" {
-		c.ISetStatus(404).IText("参数错误")
+		c.ISetStatus(400).IText("参数错误")
 		return
 	}
 
@@ -35,5 +35,5 @@ func (api *UserApi) Verify(c *gin.Context) {
 	}
 
 	// 输出
-	c.ISetOkStatus().IText("注册成功，请进入登录页面")
+	c.IRedirect("/#/login").IText("注册成功，请进入登录页面")
 }

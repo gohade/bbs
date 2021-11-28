@@ -26,6 +26,7 @@ func (api *UserApi) Logout(c *gin.Context) {
 		c.ISetStatus(500).IText(err.Error())
 		return
 	}
-	c.ISetOkStatus().IText("用户登出成功")
+	//c.ISetOkStatus().IText("用户登出成功")
+	c.IRedirect("/#/login")
 	return
 }

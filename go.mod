@@ -14,4 +14,4 @@ require (
 	gorm.io/gorm v1.21.16
 )
 
-//replace github.com/gohade/hade => /Users/yejianfeng/Documents/workspace/gohade/hade
+replace github.com/gohade/hade => /Users/yejianfeng/Documents/workspace/gohade/hade

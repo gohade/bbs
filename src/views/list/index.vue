@@ -6,7 +6,7 @@
             class="list"
             v-infinite-scroll="load"
             infinite-scroll-disabled="disabled">
-            <el-card v-for="i in count" class="box-card" shadow="hover">
+            <el-card v-for="(key, i) in count" class="box-card" shadow="hover" :key="index">
               <div slot="header" class="clearfix">
           <span>问题标题{{i}}</span>
         </div>

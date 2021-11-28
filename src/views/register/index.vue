@@ -2,29 +2,25 @@
   <div class="register">
     <el-card>
       <h2>注册</h2>
-      <el-form
-          class="register-form"
-      >
-        <el-form-item prop="username">
-          <el-input :model="form.username" placeholder="用户名" prefix-icon="fas fa-user"></el-input>
+      <el-form v-model="form" class="register-form">
+        <el-form-item >
+          <el-input v-model="form.username" placeholder="用户名" ></el-input>
         </el-form-item>
-        <el-form-item prop="email">
-          <el-input :model="form.email" placeholder="邮箱" prefix-icon="fas fa-user"></el-input>
+        <el-form-item >
+          <el-input v-model="form.email" placeholder="邮箱"></el-input>
         </el-form-item>
-        <el-form-item prop="password">
+        <el-form-item >
           <el-input
               placeholder="密码"
               type="password"
-              :model="form.password"
-              prefix-icon="fas fa-lock"
+              v-model="form.password"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="password">
+        <el-form-item >
           <el-input
               placeholder="确认密码"
-              type="repassword"
-              :model="form.repassword"
-              prefix-icon="fas fa-lock"
+              type="password"
+              v-model="form.repassword"
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -33,7 +29,7 @@
               class="login-button"
               type="primary"
               native-type="submit"
-              @submit="submitForm"
+              @click="submitForm"
               block
           >注册</el-button>
         </el-form-item>
@@ -64,20 +60,16 @@ export default {
         this.$message.error("两次输入密码不一致");
         return;
       }
+      const that = this;
       request({
         url: '/user/register',
         method: 'post',
-        params: this.form
+        data: this.form
       }).then(function (response) {
+        debugger
         const msg = response.data
-        if (response.status === 200) {
-          this.$message.success(msg);
-        } else {
-          this.$message.error(msg);
-        }
-      }).catch(e){
-        this.$message.error(e)
-      }
+        that.$message.success(msg);
+      })
     }
   }
 };
