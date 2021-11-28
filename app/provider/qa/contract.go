@@ -70,8 +70,8 @@ type Answer struct {
 	CreatedAt  time.Time `gorm:"column:created_at"`
 	UpdatedAt  time.Time `gorm:"column:updated_at"`
 
-	Author   *user.User `gorm:"foreignKey:author_id"`
-	Question *Question  `gorm:"foreignKey:question_id"`
+	Author   *user.User `gorm:"foreignKey:AuthorID"`
+	Question *Question  `gorm:"foreignKey:QuestionID"`
 }
 
 // Pager 代表分页极致

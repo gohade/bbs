@@ -12,7 +12,7 @@ import (
 // @Produce  json
 // @Tags qa
 // @Param id query int true "问题id"
-// @Success 200 {string} Msg "操作成功"
+// @Success 200 QuestionDTO question "问题详情，带回答和作者"
 // @Router /question/detail [get]
 func (api *QAApi) QuestionDetail(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)

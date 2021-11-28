@@ -19,14 +19,14 @@ type questionEditParam struct {
 // @Produce  json
 // @Tags qa
 // @Param questionEditParam body questionEditParam true "编辑问题参数"
-// @Success 200 {string} Msg "操作成功"
+// @Success 200 string Msg "操作成功"
 // @Router /question/edit [post]
 func (api *QAApi) QuestionEdit(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
 
 	param := &questionEditParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.ISetStatus(404).IText(err.Error())
+		c.ISetStatus(400).IText(err.Error())
 		return
 	}
 

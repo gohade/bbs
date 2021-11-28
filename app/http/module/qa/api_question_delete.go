@@ -13,7 +13,7 @@ import (
 // @Produce  json
 // @Tags qa
 // @Param id query int true "删除id"
-// @Success 200 {string} Msg "操作成功"
+// @Success 200 string Msg "操作成功"
 // @Router /question/delete [get]
 func (api *QAApi) QuestionDelete(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)

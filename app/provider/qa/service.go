@@ -7,6 +7,7 @@ import (
 	"github.com/gohade/hade/framework/contract"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
+	"time"
 )
 
 type QaService struct {
@@ -112,7 +113,19 @@ func (q *QaService) DeleteAnswer(ctx context.Context, answerID int64) error {
 }
 
 func (q *QaService) UpdateQuestion(ctx context.Context, question *Question) error {
-	if err := q.ormDB.WithContext(ctx).Save(question).Error; err != nil {
+	questionDB := &Question{ID: question.ID}
+	if err := q.ormDB.WithContext(ctx).First(questionDB).Error; err != nil {
+		return errors.WithStack(err)
+	}
+
+	questionDB.UpdatedAt = time.Now()
+	if question.Title != "" {
+		questionDB.Title = question.Title
+	}
+	if question.Context != "" {
+		questionDB.Context = question.Context
+	}
+	if err := q.ormDB.WithContext(ctx).Save(questionDB).Error; err != nil {
 		return errors.WithStack(err)
 	}
 	return nil

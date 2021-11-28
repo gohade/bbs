@@ -18,7 +18,7 @@ type answerCreateParam struct {
 // @Produce  json
 // @Tags qa
 // @Param answerCreateParam body answerCreateParam true "创建回答参数"
-// @Success 200 {string} Msg "操作成功"
+// @Success 200 string Msg "操作成功"
 // @Router /answer/create [post]
 func (api *QAApi) AnswerCreate(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)

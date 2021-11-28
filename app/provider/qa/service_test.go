@@ -26,11 +26,14 @@ func Test_QA(t *testing.T) {
 
 	//userService := container.MustMake(user.UserKey).(user.Service)
 	ormService := container.MustMake(contract.ORMKey).(contract.ORMService)
-	db, err := ormService.GetDB()
+	db, err := ormService.GetDB(orm.WithGormConfig(func(options *contract.DBConfig) {
+		options.DisableForeignKeyConstraintWhenMigrating = true
+	}))
+
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := db.AutoMigrate(&Question{}, &Answer{}); err != nil {
+	if err := db.AutoMigrate(&Question{}, &Answer{}, &user.User{}); err != nil {
 		t.Fatal(err)
 	}
 
