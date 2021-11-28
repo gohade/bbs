@@ -48,7 +48,7 @@ func (q *QaService) QuestionLoadAuthor(ctx context.Context, question *Question) 
 	return nil
 }
 
-func (q *QaService) QuestionsLoadAuthor(ctx context.Context, questions []*Question) error {
+func (q *QaService) QuestionsLoadAuthor(ctx context.Context, questions *[]*Question) error {
 	if err := q.ormDB.WithContext(ctx).Preload("Author").Find(questions).Error; err != nil {
 		return err
 	}
@@ -62,7 +62,7 @@ func (q *QaService) QuestionLoadAnswers(ctx context.Context, question *Question)
 	return nil
 }
 
-func (q *QaService) QuestionsLoadAnswers(ctx context.Context, questions []*Question) error {
+func (q *QaService) QuestionsLoadAnswers(ctx context.Context, questions *[]*Question) error {
 	if err := q.ormDB.WithContext(ctx).Preload("Answers").Find(questions).Error; err != nil {
 		return err
 	}
@@ -70,17 +70,18 @@ func (q *QaService) QuestionsLoadAnswers(ctx context.Context, questions []*Quest
 }
 
 func (q *QaService) PostAnswer(ctx context.Context, answer *Answer) error {
-	if err := q.ormDB.WithContext(ctx).Preload("Question").First(answer).Error; err != nil {
-		return err
-	}
-	if answer.Question == nil {
+	if answer.QuestionID == 0 {
 		return errors.New("问题不存在")
+	}
+	question := &Question{ID: answer.QuestionID}
+	if err := q.ormDB.WithContext(ctx).First(question).Error; err != nil {
+		return err
 	}
 	if err := q.ormDB.WithContext(ctx).Create(answer).Error; err != nil {
 		return err
 	}
-	answer.Question.AnswerNum = answer.Question.AnswerNum + 1
-	if err := q.ormDB.WithContext(ctx).Save(answer.Question).Error; err != nil {
+	question.AnswerNum = question.AnswerNum + 1
+	if err := q.ormDB.WithContext(ctx).Save(question).Error; err != nil {
 		return err
 	}
 	return nil

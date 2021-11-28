@@ -27,6 +27,9 @@ type Service interface {
 	Logout(ctx context.Context, user *User) error
 	// VerifyLogin 登录验证
 	VerifyLogin(ctx context.Context, token string) (*User, error)
+
+	// GetUser 获取用户信息
+	GetUser(ctx context.Context, userID int64) (*User, error)
 }
 
 // User 代表一个用户，注意这里的用户信息字段在不同接口和参数可能为空

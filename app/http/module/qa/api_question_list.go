@@ -13,7 +13,7 @@ import (
 // @Tags qa
 // @Param page query int false "列表页页数"
 // @Param size query int false "列表页单页个数"
-// @Success 200 []QuestionDTO questions "问题列表"
+// @Success 200 {array} QuestionDTO questions "问题列表"
 // @Router /question/list [get]
 func (api *QAApi) QuestionList(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
@@ -31,7 +31,7 @@ func (api *QAApi) QuestionList(c *gin.Context) {
 		return
 	}
 
-	if err := qaService.QuestionsLoadAuthor(c, questions); err != nil {
+	if err := qaService.QuestionsLoadAuthor(c, &questions); err != nil {
 		c.ISetStatus(500).IText(err.Error())
 		return
 	}

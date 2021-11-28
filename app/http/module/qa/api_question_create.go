@@ -4,7 +4,6 @@ import (
 	"bbs/app/http/middleware/auth"
 	provider "bbs/app/provider/qa"
 	"github.com/gohade/hade/framework/gin"
-	"github.com/pkg/errors"
 )
 
 type questionCreateParam struct {
@@ -26,13 +25,13 @@ func (api *QAApi) QuestionCreate(c *gin.Context) {
 
 	param := &questionCreateParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.AbortWithError(404, err)
+		c.ISetStatus(400).IText(err.Error())
 		return
 	}
 
 	user := auth.GetAuthUser(c)
 	if user == nil {
-		c.AbortWithError(500, errors.New("无权限操作"))
+		c.ISetStatus(500).IText("无权限操作")
 		return
 	}
 
@@ -42,7 +41,7 @@ func (api *QAApi) QuestionCreate(c *gin.Context) {
 		AuthorID: user.ID,
 	}
 	if err := qaService.PostQuestion(c, question); err != nil {
-		c.AbortWithError(500, err)
+		c.ISetStatus(500).IText(err.Error())
 		return
 	}
 

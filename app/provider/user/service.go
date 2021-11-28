@@ -177,6 +177,9 @@ func (u *UserService) Logout(ctx context.Context, user *User) error {
 }
 
 func (u *UserService) VerifyLogin(ctx context.Context, token string) (*User, error) {
+	if token == "" {
+		return nil, errors.New("token不能为空")
+	}
 	cacheService := u.container.MustMake(contract.CacheKey).(contract.CacheService)
 	key := fmt.Sprintf("session:%v", token)
 	user := &User{}
@@ -184,6 +187,19 @@ func (u *UserService) VerifyLogin(ctx context.Context, token string) (*User, err
 		return nil, err
 	}
 
+	return user, nil
+}
+
+func (u *UserService) GetUser(ctx context.Context, userID int64) (*User, error) {
+	ormService := u.container.MustMake(contract.ORMKey).(contract.ORMService)
+	db, err := ormService.GetDB()
+	if err != nil {
+		return nil, err
+	}
+	user := &User{ID: userID}
+	if err := db.WithContext(ctx).First(user).Error; err != nil {
+		return nil, err
+	}
 	return user, nil
 }
 

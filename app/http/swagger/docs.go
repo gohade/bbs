@@ -31,6 +31,244 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/answer/create": {
+            "post": {
+                "description": "创建回答",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "qa"
+                ],
+                "summary": "创建回答",
+                "parameters": [
+                    {
+                        "description": "创建回答参数",
+                        "name": "answerCreateParam",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/qa.answerCreateParam"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/answer/delete": {
+            "get": {
+                "description": "创建回答",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "qa"
+                ],
+                "summary": "创建回答",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "删除id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/question/create": {
+            "post": {
+                "description": "创建问题",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "qa"
+                ],
+                "summary": "创建问题",
+                "parameters": [
+                    {
+                        "description": "创建问题参数",
+                        "name": "questionCreateParam",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/qa.questionCreateParam"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/question/delete": {
+            "get": {
+                "description": "删除问题，同时删除问题中的所有答案",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "qa"
+                ],
+                "summary": "删除问题",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "删除id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/question/detail": {
+            "get": {
+                "description": "获取问题详情，包括问题的所有回答",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "qa"
+                ],
+                "summary": "获取问题详细",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "问题id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/question/edit": {
+            "post": {
+                "description": "编辑问题",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "qa"
+                ],
+                "summary": "编辑问题",
+                "parameters": [
+                    {
+                        "description": "编辑问题参数",
+                        "name": "questionEditParam",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/qa.questionEditParam"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/question/list": {
+            "get": {
+                "description": "获取问题列表，包含作者信息，不包含回答",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "qa"
+                ],
+                "summary": "获取问题列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "列表页页数",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "列表页单页个数",
+                        "name": "size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "问题列表",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/qa.QuestionDTO"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/login": {
             "post": {
                 "description": "用户登录接口",
@@ -156,6 +394,118 @@ var doc = `{
         }
     },
     "definitions": {
+        "qa.AnswerDTO": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "$ref": "#/definitions/user.UserDTO"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "qa.QuestionDTO": {
+            "type": "object",
+            "properties": {
+                "answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/qa.AnswerDTO"
+                    }
+                },
+                "author": {
+                    "$ref": "#/definitions/user.UserDTO"
+                },
+                "context": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "qa.answerCreateParam": {
+            "type": "object",
+            "required": [
+                "content",
+                "question_id"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "question_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "qa.questionCreateParam": {
+            "type": "object",
+            "required": [
+                "content",
+                "title"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "qa.questionEditParam": {
+            "type": "object",
+            "required": [
+                "content",
+                "id",
+                "title"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.UserDTO": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "userName": {
+                    "type": "string"
+                }
+            }
+        },
         "user.loginParam": {
             "type": "object",
             "required": [

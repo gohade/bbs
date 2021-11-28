@@ -22,12 +22,12 @@ type Service interface {
 	// QuestionLoadAuthor 问题加载Author字段
 	QuestionLoadAuthor(ctx context.Context, question *Question) error
 	// QuestionsLoadAuthor 批量加载Author字段
-	QuestionsLoadAuthor(ctx context.Context, questions []*Question) error
+	QuestionsLoadAuthor(ctx context.Context, questions *[]*Question) error
 
 	// QuestionLoadAnswers 单个问题加载Answers
 	QuestionLoadAnswers(ctx context.Context, question *Question) error
 	// QuestionsLoadAnswers 批量问题加载Answers
-	QuestionsLoadAnswers(ctx context.Context, questions []*Question) error
+	QuestionsLoadAnswers(ctx context.Context, questions *[]*Question) error
 
 	// PostAnswer 上传某个回答
 	// ctx必须带操作人信息
