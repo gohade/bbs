@@ -19,7 +19,7 @@ func (api *QAApi) AnswerDelete(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
 	id, exist := c.DefaultQueryInt64("id", 0)
 	if !exist {
-		c.ISetStatus(404).IText("参数错误")
+		c.ISetStatus(400).IText("参数错误")
 		return
 	}
 	user := auth.GetAuthUser(c)

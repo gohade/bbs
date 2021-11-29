@@ -18,11 +18,16 @@ type QaService struct {
 
 func (q *QaService) GetQuestions(ctx context.Context, pager *Pager) ([]*Question, error) {
 	questions := make([]*Question, 0, pager.Size)
-	if err := q.ormDB.Order("created_at desc").Offset(pager.Start).Limit(pager.Size).Find(&questions).Error; err != nil {
+	if err := q.ormDB.WithContext(ctx).Order("created_at desc").Offset(pager.Start).Limit(pager.Size).Find(&questions).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 		return nil, err
+	}
+
+	total := int64(0)
+	if err := q.ormDB.Count(&total).Error; err != nil {
+		pager.Total = total
 	}
 	return questions, nil
 }

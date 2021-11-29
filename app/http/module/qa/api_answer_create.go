@@ -25,7 +25,7 @@ func (api *QAApi) AnswerCreate(c *gin.Context) {
 
 	param := &answerCreateParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.ISetStatus(404).IText(err.Error())
+		c.ISetStatus(400).IText(err.Error())
 		return
 	}
 

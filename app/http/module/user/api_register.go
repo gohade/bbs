@@ -21,7 +21,7 @@ type registerParam struct {
 // @Produce  json
 // @Tags user
 // @Param registerParam body registerParam true "注册参数"
-// @Success 200 {string} Message "注册成功"
+// @Success 200 string Message "注册成功"
 // @Router /user/register [post]
 func (api *UserApi) Register(c *gin.Context) {
 	// 验证参数
@@ -30,7 +30,7 @@ func (api *UserApi) Register(c *gin.Context) {
 
 	param := &registerParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.ISetStatus(400).IText("参数错误")
+		c.ISetStatus(400).IText("参数错误 ")
 		return
 	}
 

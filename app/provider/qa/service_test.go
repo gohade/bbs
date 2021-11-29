@@ -75,17 +75,14 @@ func Test_QA(t *testing.T) {
 			Title:     "question1",
 			Context:   "this is context",
 			AnswerNum: 0,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
 		}
 		var question2 = &Question{
 			Title:     "question2",
 			Context:   "this is context",
 			AnswerNum: 0,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
 		}
 
+		// 创建问题
 		{
 			question1.AuthorID = user1.ID
 			err := qaService.PostQuestion(ctx, question1)
@@ -93,6 +90,7 @@ func Test_QA(t *testing.T) {
 
 			question1, err = qaService.GetQuestion(ctx, question1.ID)
 			So(err, ShouldBeNil)
+			So(question1.CreatedAt, ShouldNotBeNil)
 		}
 
 		{
