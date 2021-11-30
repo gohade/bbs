@@ -136,6 +136,22 @@ func (q *QaService) UpdateQuestion(ctx context.Context, question *Question) erro
 	return nil
 }
 
+// AnswerLoadAuthor 问题加载Author字段
+func (q *QaService) AnswerLoadAuthor(ctx context.Context, question *Answer) error {
+	if err := q.ormDB.WithContext(ctx).Preload("Author").First(question).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+// AnswersLoadAuthor 批量加载Author字段
+func (q *QaService) AnswersLoadAuthor(ctx context.Context, questions *[]*Answer) error {
+	if err := q.ormDB.WithContext(ctx).Preload("Author").Find(questions).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func NewQaService(params ...interface{}) (interface{}, error) {
 	container := params[0].(framework.Container)
 	ormService := container.MustMake(contract.ORMKey).(contract.ORMService)

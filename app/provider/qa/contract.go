@@ -36,6 +36,11 @@ type Service interface {
 	// GetAnswer 获取回答
 	GetAnswer(ctx context.Context, answerID int64) (*Answer, error)
 
+	// AnswerLoadAuthor 问题加载Author字段
+	AnswerLoadAuthor(ctx context.Context, question *Answer) error
+	// AnswersLoadAuthor 批量加载Author字段
+	AnswersLoadAuthor(ctx context.Context, questions *[]*Answer) error
+
 	// DeleteQuestion 删除问题，同时删除对应的回答
 	// ctx必须带操作人信息
 	DeleteQuestion(ctx context.Context, questionID int64) error
