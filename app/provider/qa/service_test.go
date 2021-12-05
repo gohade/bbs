@@ -135,7 +135,7 @@ func Test_QA(t *testing.T) {
 
 		answer1 := &Answer{
 			QuestionID: question1.ID,
-			Content:    "answer context",
+			Context:    "answer context",
 			AuthorID:   user2.ID,
 			CreatedAt:  time.Now(),
 			UpdatedAt:  time.Now(),
@@ -166,7 +166,7 @@ func Test_QA(t *testing.T) {
 			an, err := qaService.GetAnswer(ctx, answer1.ID)
 			So(err, ShouldBeNil)
 			So(an, ShouldNotBeNil)
-			So(an.Content, ShouldEqual, answer1.Content)
+			So(an.Context, ShouldEqual, answer1.Context)
 		}
 
 		{
@@ -177,7 +177,7 @@ func Test_QA(t *testing.T) {
 
 		answer2 := &Answer{
 			QuestionID: question2.ID,
-			Content:    "answer2 content",
+			Context:    "answer2 content",
 			AuthorID:   user1.ID,
 			CreatedAt:  time.Now(),
 			UpdatedAt:  time.Now(),

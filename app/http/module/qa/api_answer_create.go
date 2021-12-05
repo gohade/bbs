@@ -8,7 +8,7 @@ import (
 
 type answerCreateParam struct {
 	QuestionID int64  `json:"question_id" binding:"required"`
-	Content    string `json:"content" binding:"required"`
+	Context    string `json:"context" binding:"required"`
 }
 
 // AnswerCreate 代表创建回答
@@ -37,7 +37,7 @@ func (api *QAApi) AnswerCreate(c *gin.Context) {
 
 	answer := &provider.Answer{
 		QuestionID: param.QuestionID,
-		Content:    param.Content,
+		Context:    param.Context,
 		AuthorID:   user.ID,
 	}
 	if err := qaService.PostAnswer(c, answer); err != nil {

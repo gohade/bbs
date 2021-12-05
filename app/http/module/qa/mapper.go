@@ -3,6 +3,8 @@ package qa
 import (
 	"bbs/app/http/module/user"
 	"bbs/app/provider/qa"
+	"github.com/PuerkitoBio/goquery"
+	"strings"
 )
 
 func ConvertAnswerToDTO(answer *qa.Answer) *AnswerDTO {
@@ -17,7 +19,7 @@ func ConvertAnswerToDTO(answer *qa.Answer) *AnswerDTO {
 	}
 	return &AnswerDTO{
 		ID:        answer.ID,
-		Content:   answer.Content,
+		Content:   answer.Context,
 		CreatedAt: answer.CreatedAt,
 		UpdatedAt: answer.UpdatedAt,
 		Author:    author,
@@ -38,7 +40,7 @@ func ConvertAnswersToDTO(answers []*qa.Answer) []*AnswerDTO {
 }
 
 // ConvertQuestionToDTO 将question转换为DTO
-func ConvertQuestionToDTO(question *qa.Question) *QuestionDTO {
+func ConvertQuestionToDTO(question *qa.Question, flags map[string]string) *QuestionDTO {
 	if question == nil {
 		return nil
 	}
@@ -48,15 +50,38 @@ func ConvertQuestionToDTO(question *qa.Question) *QuestionDTO {
 			ID: question.AuthorID,
 		}
 	}
+
+	context := question.Context
+	if flags != nil {
+		if isShortContext, ok := flags["is_short_context"]; ok && isShortContext == "true" {
+			context = getShortContext(context)
+		}
+	}
+
 	return &QuestionDTO{
 		ID:        question.ID,
 		Title:     question.Title,
-		Context:   question.Context,
+		Context:   context,
 		CreatedAt: question.CreatedAt,
 		UpdatedAt: question.UpdatedAt,
 		Author:    author,
 		Answers:   ConvertAnswersToDTO(question.Answers),
 	}
+}
+
+func getShortContext(context string) string {
+	p := strings.NewReader(context)
+	doc, _ := goquery.NewDocumentFromReader(p)
+
+	doc.Find("script").Each(func(i int, el *goquery.Selection) {
+		el.Remove()
+	})
+
+	text := doc.Text()
+	if len(text) > 20 {
+		text = text[:20] + "..."
+	}
+	return text
 }
 
 // ConvertQuestionsToDTO 将questions转换为DTO
@@ -66,7 +91,7 @@ func ConvertQuestionsToDTO(questions []*qa.Question) []*QuestionDTO {
 	}
 	ret := make([]*QuestionDTO, 0, len(questions))
 	for _, question := range questions {
-		ret = append(ret, ConvertQuestionToDTO(question))
+		ret = append(ret, ConvertQuestionToDTO(question, map[string]string{"is_short_context": "true"}))
 	}
 	return ret
 }

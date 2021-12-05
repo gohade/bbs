@@ -71,7 +71,7 @@ type Question struct {
 type Answer struct {
 	ID         int64          `gorm:"column:id;primaryKey"`
 	QuestionID int64          `gorm:"column:question_id;index;comment:问题id;not null;default 0"`
-	Content    string         `gorm:"column:context;comment:内容"`
+	Context    string         `gorm:"column:context;comment:内容"`
 	AuthorID   int64          `gorm:"column:author_id;comment:作者id;not null;default:0"`
 	CreatedAt  time.Time      `gorm:"column:created_at;autoCreateTime;comment:创建时间"`
 	UpdatedAt  time.Time      `gorm:"column:updated_at;autoUpdateTime;autoCreateTime;<-:false;comment:更新时间"`

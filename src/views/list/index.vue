@@ -6,49 +6,81 @@
             class="list"
             v-infinite-scroll="load"
             infinite-scroll-disabled="disabled">
-            <el-card v-for="(key, i) in count" class="box-card" shadow="hover" :key="index">
+            <el-card v-for="question in questions" class="box-card" shadow="hover">
               <div slot="header" class="clearfix">
-          <span>问题标题{{i}}</span>
+          <span>{{question.title}}</span>
         </div>
               <div class="text item">
-                这个是问题的具体内容，显示前200个字...
+                {{question.context}}
               </div>
               <div class="bottom clearfix">
-                  <time class="time">2021-10-10 10:10:10 ｜ jianfengye  | 10 回答</time>
-                  <el-button type="text" class="button">去看看</el-button>
+                  <time class="time">{{question.created_at}} ｜ {{question.author.user_name}}  | {{question.answer_num}} 回答</time>
+                  <el-button type="text" class="button" @click="gotoDetail(question.id)">去看看</el-button>
               </div>
             </el-card>
         </ul>
         <p v-if="loading" class="loading_tips">加载中...</p>
-        <p v-if="noMore" class="loading_tips">没有更多了</p>
+        <p v-if="disabled" class="loading_tips">没有更多了</p>
       </div>
     </el-col>
   </el-row>
 </template>
 
 <script>
+import request from "../../utils/request";
+
 export default {
   data () {
     return {
-      count:10,
-      loading: false
+      count: 10,
+      start: 0,
+      size: 10,
+      questions: [],
+      loading: false,
+      noMore: false
     }
   },
+  created() {
+    this.getQuestions();
+  },
   computed: {
-    noMore () {
-      return this.count >= 20
-    },
     disabled () {
       return this.loading || this.noMore
     }
   },
   methods: {
     load () {
+      if (this.noMore === true) {
+        return
+      }
       this.loading = true
       setTimeout(() => {
-        this.count += 2
         this.loading = false
+        this.getQuestions()
       }, 2000)
+    },
+    getQuestions() {
+      const that = this;
+      request({
+        url: '/question/list',
+        method: 'get',
+        params: {
+          start: this.start,
+          size: this.size,
+        }
+      }).then(function (response) {
+        const questions = response.data
+        if (questions === null || questions.length === 0) {
+          that.noMore = true
+        }
+        that.questions = that.questions.concat(questions)
+        that.start = that.start + questions.length
+      })
+      this.loading = false;
+    },
+    gotoDetail(id) {
+      // go to detail page
+      this.$router.push({path: '/detail', query:{'id': id}})
     }
   }
 }

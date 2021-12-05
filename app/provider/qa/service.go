@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gohade/hade/framework"
 	"github.com/gohade/hade/framework/contract"
+	"github.com/jianfengye/collection"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	"time"
@@ -18,17 +19,17 @@ type QaService struct {
 
 func (q *QaService) GetQuestions(ctx context.Context, pager *Pager) ([]*Question, error) {
 	questions := make([]*Question, 0, pager.Size)
-	if err := q.ormDB.WithContext(ctx).Order("created_at desc").Offset(pager.Start).Limit(pager.Size).Find(&questions).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-		return nil, err
-	}
-
 	total := int64(0)
 	if err := q.ormDB.Count(&total).Error; err != nil {
 		pager.Total = total
 	}
+	if err := q.ormDB.WithContext(ctx).Order("created_at desc").Offset(pager.Start).Limit(pager.Size).Find(&questions).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return []*Question{}, nil
+		}
+		return nil, err
+	}
+
 	return questions, nil
 }
 
@@ -62,7 +63,9 @@ func (q *QaService) QuestionsLoadAuthor(ctx context.Context, questions *[]*Quest
 }
 
 func (q *QaService) QuestionLoadAnswers(ctx context.Context, question *Question) error {
-	if err := q.ormDB.WithContext(ctx).Preload("Answers").First(question).Error; err != nil {
+	if err := q.ormDB.WithContext(ctx).Preload("Answers", func(db *gorm.DB) *gorm.DB {
+		return db.Order("answers.created_at desc")
+	}).First(question).Error; err != nil {
 		return err
 	}
 	return nil
@@ -145,8 +148,19 @@ func (q *QaService) AnswerLoadAuthor(ctx context.Context, question *Answer) erro
 }
 
 // AnswersLoadAuthor 批量加载Author字段
-func (q *QaService) AnswersLoadAuthor(ctx context.Context, questions *[]*Answer) error {
-	if err := q.ormDB.WithContext(ctx).Preload("Author").Find(questions).Error; err != nil {
+func (q *QaService) AnswersLoadAuthor(ctx context.Context, answers *[]*Answer) error {
+	if answers == nil {
+		return nil
+	}
+	answerColl := collection.NewObjPointCollection(*answers)
+	ids, err := answerColl.Pluck("ID").ToInt64s()
+	if err != nil {
+		return err
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	if err := q.ormDB.WithContext(ctx).Preload("Author").Find(answers, ids).Error; err != nil {
 		return err
 	}
 	return nil

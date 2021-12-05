@@ -10,10 +10,13 @@
             <editor :options="editorOptions"
                     height="500px"
                     initialEditType="wysiwyg"
-                    previewStyle="vertical" />
+                    previewStyle="vertical"
+                    ref="toastuiEditor"
+                    :initialValue="content"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">立即提问</el-button>
+            <el-button type="primary" @click="postQuestion">立即提问</el-button>
             <el-button>取消</el-button>
           </el-form-item>
         </el-form>
@@ -26,6 +29,7 @@
 import '@toast-ui/editor/dist/toastui-editor.css';
 
 import { Editor } from '@toast-ui/vue-editor';
+import request from "../../utils/request";
 
 export default {
   components: {
@@ -37,6 +41,7 @@ export default {
         title: '',
         content: ''
       },
+      content: '<p>123213213123</p>',
       editorOptions: {
         minHeight: '200px',
         language: 'en-US',
@@ -53,6 +58,22 @@ export default {
         ]
       }
     }
+  },
+  methods: {
+    postQuestion: function() {
+      debugger
+      let html = this.$refs.toastuiEditor.$data.editor.getHTML()
+      this.question.content = html;
+      const that = this
+      request({
+        method: 'POST',
+        url: "/question/create",
+        data: this.question,
+      }).then(function () {
+        that.$router.push({ path: '/' })
+      })
+    },
+
   }
 }
 </script>

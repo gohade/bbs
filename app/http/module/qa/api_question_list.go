@@ -17,17 +17,23 @@ import (
 // @Router /question/list [get]
 func (api *QAApi) QuestionList(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
-	page, _ := c.DefaultQueryInt("page", 1)
+	start, _ := c.DefaultQueryInt("start", 0)
 	size, _ := c.DefaultQueryInt("size", 10)
-
-	start := (page - 1) * size
+	logger := c.MustMakeLog()
 	pager := provider.Pager{
 		Start: start,
 		Size:  size,
 	}
+	logger.Debug(c, "get param", map[string]interface{}{
+		"pager": pager,
+	})
 	questions, err := qaService.GetQuestions(c, &pager)
 	if err != nil {
 		c.ISetStatus(500).IText(err.Error())
+		return
+	}
+	if len(questions) == 0 {
+		c.ISetOkStatus().IJson([]*QuestionDTO{})
 		return
 	}
 

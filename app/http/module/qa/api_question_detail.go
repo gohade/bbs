@@ -18,7 +18,7 @@ func (api *QAApi) QuestionDetail(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
 	id, exist := c.DefaultQueryInt64("id", 0)
 	if !exist {
-		c.ISetStatus(404).IText("参数错误")
+		c.ISetStatus(400).IText("参数错误")
 		return
 	}
 
@@ -36,8 +36,22 @@ func (api *QAApi) QuestionDetail(c *gin.Context) {
 		c.ISetStatus(500).IText(err.Error())
 		return
 	}
+	if err := qaService.AnswersLoadAuthor(c, &(question.Answers)); err != nil {
+		c.ISetStatus(500).IText(err.Error())
+		return
+	}
+	//if question.Answers != nil && len(question.Answers) > 0 {
+	//	answersColl := collection.NewObjPointCollection(question.Answers)
+	//	objs := make([]*provider.Answer, 0)
+	//	answersColl.SortByDesc("CreatedAt").ToObjs(&objs)
+	//	if answersColl.Err() != nil {
+	//		c.ISetStatus(500).IText(answersColl.Err().Error())
+	//		return
+	//	}
+	//	question.Answers = objs
+	//}
 
-	questionDTO := ConvertQuestionToDTO(question)
+	questionDTO := ConvertQuestionToDTO(question, nil)
 
 	c.ISetOkStatus().IJson(questionDTO)
 }
