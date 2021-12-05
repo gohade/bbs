@@ -6,19 +6,18 @@
           class="login-form"
       >
         <el-form-item prop="username">
-          <el-input :model="model.username" placeholder="用户名" prefix-icon="fas fa-user"></el-input>
+          <el-input v-model="model.username" placeholder="用户名" ></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input
               placeholder="密码"
               type="password"
-              prefix-icon="fas fa-lock"
-              :model="model.password"
+              v-model="model.password"
           ></el-input>
         </el-form-item>
         <el-row>
           <el-col class="register">
-            还没有账号？请点击 <el-link type="primary">注册</el-link>
+            还没有账号？请点击 <router-link class="to-link" :to="{path: '/register'}"><el-link type="primary" >注册</el-link></router-link>
           </el-col>
         </el-row>
         <el-form-item>
@@ -26,7 +25,7 @@
               class="login-button"
               type="primary"
               native-type="submit"
-              @click.native.prevent="handleLogin"
+              @click="handleLogin"
               block
           >登录</el-button>
         </el-form-item>
@@ -50,7 +49,7 @@ export default {
   },
   methods: {
     handleLogin() {
-      this.$store.dispatch('/user/login', param).then(() => {
+      this.$store.dispatch('user/login', this.model).then(() => {
         this.$router.push({ path: this.redirect || '/' })
       }).catch(() => {
       })
@@ -61,6 +60,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.to-link {
+  text-decoration:none;
+}
 .register {
   font-weight: 500;
   font-size: 14px;

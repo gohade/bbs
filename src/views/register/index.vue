@@ -2,38 +2,25 @@
   <div class="register">
     <el-card>
       <h2>注册</h2>
-      <el-form
-          class="register-form"
-      >
-        <el-form-item prop="username">
-          <el-input placeholder="用户名" prefix-icon="fas fa-user"></el-input>
+      <el-form v-model="form" class="register-form">
+        <el-form-item >
+          <el-input v-model="form.username" placeholder="用户名" ></el-input>
         </el-form-item>
-        <el-form-item prop="email">
-          <el-input placeholder="邮箱" prefix-icon="fas fa-user"></el-input>
+        <el-form-item >
+          <el-input v-model="form.email" placeholder="邮箱"></el-input>
         </el-form-item>
-        <el-form-item prop="verify_code">
-          <el-row  justify="space-around">
-            <el-col :span="16">
-              <el-input placeholder="验证码" prefix-icon="fas fa-user"></el-input>
-            </el-col>
-            <el-col :span="6" :offset="1" >
-              <el-button class="send_verify_code" type="primary">发送验证码</el-button>
-            </el-col>
-          </el-row>
-
-        </el-form-item>
-        <el-form-item prop="password">
+        <el-form-item >
           <el-input
               placeholder="密码"
               type="password"
-              prefix-icon="fas fa-lock"
+              v-model="form.password"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="password">
+        <el-form-item >
           <el-input
               placeholder="确认密码"
-              type="repassword"
-              prefix-icon="fas fa-lock"
+              type="password"
+              v-model="form.repassword"
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -42,6 +29,7 @@
               class="login-button"
               type="primary"
               native-type="submit"
+              @click="submitForm"
               block
           >注册</el-button>
         </el-form-item>
@@ -51,18 +39,38 @@
 </template>
 
 <script>
+import request from '../../utils/request'
+
 export default {
   name: "register",
   data() {
     return {
-      model: {
-        username: "",
-        password: ""
+      form: {
+        username: '',
+        password: '',
+        email: '',
+        repassword: ''
       },
       loading: false,
     };
   },
   methods: {
+    submitForm: function(e) {
+      if (this.form.repassword !== this.form.password) {
+        this.$message.error("两次输入密码不一致");
+        return;
+      }
+      const that = this;
+      request({
+        url: '/user/register',
+        method: 'post',
+        data: this.form
+      }).then(function (response) {
+        debugger
+        const msg = response.data
+        that.$message.success(msg);
+      })
+    }
   }
 };
 </script>

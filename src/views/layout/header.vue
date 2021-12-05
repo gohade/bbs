@@ -6,7 +6,7 @@
            <div class="hade_title"><a href="/" id="home-link" title="hadecast">hadecast</a></div>
           </el-col>
           <el-col class="" :span="8" :offset="8">
-            <div class="header_name">欢迎你，jianfengye | <a href="/" id="home-link" title="hadecast">我要提问</a> </div>
+            <div class="header_name"> <router-link class="to-link" :to="{path: '/create'}"><a title="hadecast">我要提问</a></router-link> | jianfengye | <a href="/user/logout" title="hadecast">登出</a> </div>
           </el-col>
         </el-row>
       </el-col>
@@ -16,7 +16,6 @@
 <script>
 export default {
   methods: {
-
   }
 }
 </script>

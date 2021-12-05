@@ -23,20 +23,28 @@ service.interceptors.request.use(
 // response中统一做处理
 service.interceptors.response.use(
     response => {
+        // Any status code that lie within the range of 2xx cause this function to trigger
+        // Do something with response data
         // 判断http status是否为200
         if (response.status !== 200) {
-            Message({
-                message: "请求错误",
-                type: 'error',
-                duration: 5 * 1000
-            })
+            const data = response.data
+            if (typeof data == 'string') {
+                Message({
+                    message: data,
+                    type: 'error',
+                    duration: 5 * 1000
+                })
+            }
         }
+        return response
     },
     error => {
-        console.log('err' + error) // for debug
+        // Any status codes that falls outside the range of 2xx cause this function to trigger
+        // Do something with response error
+        console.log('err: ' + error) // for debug
         // 打印Message消息
         Message({
-            message: error.message,
+            message: error.response.data,
             type: 'error',
             duration: 5 * 1000
         })

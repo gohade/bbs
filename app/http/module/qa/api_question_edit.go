@@ -4,41 +4,53 @@ import (
 	"bbs/app/http/middleware/auth"
 	provider "bbs/app/provider/qa"
 	"github.com/gohade/hade/framework/gin"
-	"github.com/pkg/errors"
 )
 
-// QuestionEdit 代表编辑问题
-func (api *QAApi) QuestionEdit(c *gin.Context)  {
+type questionEditParam struct {
+	ID      int64  `json:"id" binding:"required"`
+	Title   string `json:"title" binding:"required"`
+	Content string `json:"content" binding:"required"`
+}
+
+// QuestionEdit 编辑问题
+// @Summary 编辑问题
+// @Description 编辑问题
+// @Accept  json
+// @Produce  json
+// @Tags qa
+// @Param questionEditParam body questionEditParam true "编辑问题参数"
+// @Success 200 string Msg "操作成功"
+// @Router /question/edit [post]
+func (api *QAApi) QuestionEdit(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
-	type Param struct {
-		ID int64 `json:"id" binding:"required"`
-		Title string `json:"title" binding:"required"`
-		Content string `json:"content" binding:"required"`
-	}
-	param := &Param{}
+
+	param := &questionEditParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.AbortWithError(404, err); return
+		c.ISetStatus(400).IText(err.Error())
+		return
 	}
 
 	questionOld, err := qaService.GetQuestion(c, param.ID)
 	if err != nil || questionOld == nil {
-		c.AbortWithError(500, errors.New("操作的问题不存在"))
+		c.ISetStatus(500).IText("操作的问题不存在")
+		return
 	}
 
 	user := auth.GetAuthUser(c)
-	if user == nil  || user.ID != questionOld.AuthorID {
-		c.AbortWithError(500, errors.New("无权限操作")); return
+	if user == nil || user.ID != questionOld.AuthorID {
+		c.ISetStatus(500).IText("无权限操作")
+		return
 	}
 
 	question := &provider.Question{
-		ID: param.ID,
-		Title:     param.Title,
-		Context:   param.Content,
+		ID:      param.ID,
+		Title:   param.Title,
+		Context: param.Content,
 	}
 	if err := qaService.UpdateQuestion(c, question); err != nil {
-		c.AbortWithError(500, err); return
+		c.ISetStatus(500).IText(err.Error())
+		return
 	}
 
 	c.ISetOkStatus().IText("操作成功")
 }
-

@@ -1,56 +1,349 @@
 basePath: /
 definitions:
-  demo.UserDTO:
+  qa.AnswerDTO:
     properties:
+      author:
+        $ref: '#/definitions/user.UserDTO'
+      content:
+        type: string
+      createdAt:
+        type: string
       id:
         type: integer
-      name:
+      updatedAt:
         type: string
+    type: object
+  qa.QuestionDTO:
+    properties:
+      answers:
+        items:
+          $ref: '#/definitions/qa.AnswerDTO'
+        type: array
+      author:
+        $ref: '#/definitions/user.UserDTO'
+      context:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  qa.answerCreateParam:
+    properties:
+      content:
+        type: string
+      question_id:
+        type: integer
+    required:
+    - content
+    - question_id
+    type: object
+  qa.questionCreateParam:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    required:
+    - content
+    - title
+    type: object
+  qa.questionEditParam:
+    properties:
+      content:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    required:
+    - content
+    - id
+    - title
+    type: object
+  user.UserDTO:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      userName:
+        type: string
+    type: object
+  user.loginParam:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  user.registerParam:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
     type: object
 info:
   contact:
-    email: yejianfeng
-    name: yejianfeng1
-  description: hade测试
+    email: jianfengye
+    name: jianfengye
+  description: hade论坛
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: https://github.com/swaggo/swag
-  title: hade
-  version: "1.1"
+  title: hadecast
+  version: "1.0"
 paths:
-  /demo/demo:
-    get:
-      description: 获取所有用户
+  /answer/create:
+    post:
+      consumes:
+      - application/json
+      description: 创建回答
+      parameters:
+      - description: 创建回答参数
+        in: body
+        name: answerCreateParam
+        required: true
+        schema:
+          $ref: '#/definitions/qa.answerCreateParam'
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: 操作成功
           schema:
-            items:
-              items:
-                $ref: '#/definitions/demo.UserDTO'
-              type: array
-            type: array
-      summary: 获取所有用户
+            type: string
+      summary: 创建回答
       tags:
-      - demo
-  /demo/demo2:
+      - qa
+  /answer/delete:
     get:
-      description: 获取所有学生,不进行分页
+      consumes:
+      - application/json
+      description: 创建回答
+      parameters:
+      - description: 删除id
+        in: query
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: 操作成功
+          schema:
+            type: string
+      summary: 创建回答
+      tags:
+      - qa
+  /question/create:
+    post:
+      consumes:
+      - application/json
+      description: 创建问题
+      parameters:
+      - description: 创建问题参数
+        in: body
+        name: questionCreateParam
+        required: true
+        schema:
+          $ref: '#/definitions/qa.questionCreateParam'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            type: string
+      summary: 创建问题
+      tags:
+      - qa
+  /question/delete:
+    get:
+      consumes:
+      - application/json
+      description: 删除问题，同时删除问题中的所有答案
+      parameters:
+      - description: 删除id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            type: string
+      summary: 删除问题
+      tags:
+      - qa
+  /question/detail:
+    get:
+      consumes:
+      - application/json
+      description: 获取问题详情，包括问题的所有回答
+      parameters:
+      - description: 问题id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            type: string
+      summary: 获取问题详细
+      tags:
+      - qa
+  /question/edit:
+    post:
+      consumes:
+      - application/json
+      description: 编辑问题
+      parameters:
+      - description: 编辑问题参数
+        in: body
+        name: questionEditParam
+        required: true
+        schema:
+          $ref: '#/definitions/qa.questionEditParam'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            type: string
+      summary: 编辑问题
+      tags:
+      - qa
+  /question/list:
+    get:
+      consumes:
+      - application/json
+      description: 获取问题列表，包含作者信息，不包含回答
+      parameters:
+      - description: 列表页页数
+        in: query
+        name: page
+        type: integer
+      - description: 列表页单页个数
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 问题列表
           schema:
             items:
-              $ref: '#/definitions/demo.UserDTO'
+              $ref: '#/definitions/qa.QuestionDTO'
             type: array
-      summary: 获取所有学生
+      summary: 获取问题列表
       tags:
-      - demo
+      - qa
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: 用户登录接口
+      parameters:
+      - description: login with param
+        in: body
+        name: loginParam
+        required: true
+        schema:
+          $ref: '#/definitions/user.loginParam'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token
+          schema:
+            type: string
+      summary: 用户登录
+      tags:
+      - user
+  /user/logout:
+    get:
+      consumes:
+      - application/json
+      description: 调用表示用户登出
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 用户登出成功
+          schema:
+            type: string
+      summary: 用户登出
+      tags:
+      - user
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: 用户注册接口
+      parameters:
+      - description: 注册参数
+        in: body
+        name: registerParam
+        required: true
+        schema:
+          $ref: '#/definitions/user.registerParam'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 注册成功
+          schema:
+            type: string
+      summary: 用户注册
+      tags:
+      - user
+  /user/register/verify:
+    get:
+      consumes:
+      - application/json
+      description: 使用token验证用户注册信息
+      parameters:
+      - description: 注册token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 注册成功，请进入登录页面
+          schema:
+            type: string
+      summary: 验证注册信息
+      tags:
+      - user
 securityDefinitions:
   ApiKeyAuth:
     in: header

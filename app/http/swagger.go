@@ -1,11 +1,11 @@
 // Package http API.
-// @title hade
-// @version 1.1
-// @description hade测试
+// @title hadecast
+// @version 1.0
+// @description hade论坛
 // @termsOfService https://github.com/swaggo/swag
 
-// @contact.name yejianfeng1
-// @contact.email yejianfeng
+// @contact.name jianfengye
+// @contact.email jianfengye
 
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
@@ -24,5 +24,5 @@
 package http
 
 import (
-    _ "bbs/app/http/swagger"
+	_ "bbs/app/http/swagger"
 )
