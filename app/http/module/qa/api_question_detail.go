@@ -22,35 +22,30 @@ func (api *QAApi) QuestionDetail(c *gin.Context) {
 		return
 	}
 
+	// 获取问题详情
 	question, err := qaService.GetQuestion(c, id)
 	if err != nil {
 		c.ISetStatus(500).IText(err.Error())
 		return
 	}
 
+	// 加载问题作者
 	if err := qaService.QuestionLoadAuthor(c, question); err != nil {
 		c.ISetStatus(500).IText(err.Error())
 		return
 	}
+	// 加载所有答案
 	if err := qaService.QuestionLoadAnswers(c, question); err != nil {
 		c.ISetStatus(500).IText(err.Error())
 		return
 	}
-	if err := qaService.AnswersLoadAuthor(c, &(question.Answers)); err != nil {
+	// 加载答案的所有作者
+	if err := qaService.AnswersLoadAuthor(c, &question.Answers); err != nil {
 		c.ISetStatus(500).IText(err.Error())
 		return
 	}
-	//if question.Answers != nil && len(question.Answers) > 0 {
-	//	answersColl := collection.NewObjPointCollection(question.Answers)
-	//	objs := make([]*provider.Answer, 0)
-	//	answersColl.SortByDesc("CreatedAt").ToObjs(&objs)
-	//	if answersColl.Err() != nil {
-	//		c.ISetStatus(500).IText(answersColl.Err().Error())
-	//		return
-	//	}
-	//	question.Answers = objs
-	//}
 
+	// 输出转换
 	questionDTO := ConvertQuestionToDTO(question, nil)
 
 	c.ISetOkStatus().IJson(questionDTO)

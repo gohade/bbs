@@ -66,6 +66,7 @@ func ConvertQuestionToDTO(question *qa.Question, flags map[string]string) *Quest
 		UpdatedAt: question.UpdatedAt,
 		Author:    author,
 		Answers:   ConvertAnswersToDTO(question.Answers),
+		AnswerNum: question.AnswerNum,
 	}
 }
 

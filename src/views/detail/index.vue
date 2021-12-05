@@ -3,7 +3,7 @@
     <el-col :span="8">
       <el-card v-if="question" class="box-card" shadow="never">
         <div slot="header" class="clearfix">
-          <span>{{question.title}} <span class="header_name" style="margin-right: 5px; float: right;"> <span @click="gotoQuestionEdit">修改</span> ｜ <span>删除</span> </span> </span>
+          <span>{{question.title}} <span class="header_name" style="margin-right: 5px; float: right;"> <span @click="gotoQuestionEdit">修改</span> ｜ <span @click="gotoDeleteQuestion">删除</span> </span> </span>
         </div>
         <div>
           <viewer ref="questionViewer" :options="questionViewerOptions" :initialValue="question.context" />
@@ -12,7 +12,7 @@
       <el-divider content-position="left">所有回答</el-divider>
       <el-card v-for="answer in question.answers" style="margin-top: 5px; " class="box-card" shadow="hover">
         <div slot="header" class="clearfix">
-          <span>{{answer.author.user_name}} | {{answer.created_at | formatDate}} <span class="header_name" style="margin-right: 5px; float: right;">删除</span></span>
+          <span>{{answer.author.user_name}} | {{answer.created_at | formatDate}} <span class="header_name" style="margin-right: 5px; float: right;" @click="gotoDeleteAnswer(answer.id)">删除</span></span>
         </div>
         <div>
           <viewer ref="answerViewer" :initialValue="answer.content" />
@@ -25,7 +25,7 @@
             <editor :options="editorOptions"
                     :initialValue = "answerContext"
                     height="200px"
-                    initialEditType="wysiwyg"
+                    initialEditType="markdown"
                     ref="toastuiEditor"
                     previewStyle="vertical" />
           </el-form-item>
@@ -64,12 +64,12 @@ export default {
         language: 'en-US',
         useCommandShortcut: true,
         usageStatistics: true,
-        hideModeSwitch: true,
+        hideModeSwitch: false,
         toolbarItems: [
           ['heading', 'bold', 'italic', 'strike'],
           ['hr', 'quote'],
           ['ul', 'ol', 'task', 'indent', 'outdent'],
-          ['table', 'image', 'link'],
+          ['table', 'link'],
           ['code', 'codeblock'],
           ['scrollSync'],
         ]
@@ -114,6 +114,30 @@ export default {
     gotoQuestionEdit: function () {
       this.$router.push({path: '/edit', query:{'id': this.id}})
     },
+    gotoDeleteQuestion: function (){
+      const that = this
+      request({
+        method: 'GET',
+        url: "/question/delete",
+        params: {
+          "id": that.id,
+        },
+      }).then(function () {
+        that.$router.go(0)
+      })
+    },
+    gotoDeleteAnswer: function(id) {
+      const that = this
+      request({
+        method: 'GET',
+        url: "/answer/delete",
+        params: {
+          "id": id,
+        },
+      }).then(function () {
+        that.$router.go(0)
+      })
+    }
   }
 };
 </script>

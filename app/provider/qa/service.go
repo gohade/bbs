@@ -56,7 +56,20 @@ func (q *QaService) QuestionLoadAuthor(ctx context.Context, question *Question) 
 }
 
 func (q *QaService) QuestionsLoadAuthor(ctx context.Context, questions *[]*Question) error {
-	if err := q.ormDB.WithContext(ctx).Preload("Author").Find(questions).Error; err != nil {
+	if questions == nil {
+		return nil
+	}
+
+	questionColl := collection.NewObjPointCollection(*questions)
+	ids, err := questionColl.Pluck("ID").ToInt64s()
+	if err != nil {
+		return err
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+
+	if err := q.ormDB.WithContext(ctx).Preload("Author").Order("created_at desc").Find(questions, ids).Error; err != nil {
 		return err
 	}
 	return nil
@@ -72,7 +85,20 @@ func (q *QaService) QuestionLoadAnswers(ctx context.Context, question *Question)
 }
 
 func (q *QaService) QuestionsLoadAnswers(ctx context.Context, questions *[]*Question) error {
-	if err := q.ormDB.WithContext(ctx).Preload("Answers").Find(questions).Error; err != nil {
+	if questions == nil {
+		return nil
+	}
+
+	questionColl := collection.NewObjPointCollection(*questions)
+	ids, err := questionColl.Pluck("ID").ToInt64s()
+	if err != nil {
+		return err
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+
+	if err := q.ormDB.WithContext(ctx).Preload("Answers").Find(questions, ids).Error; err != nil {
 		return err
 	}
 	return nil
@@ -82,17 +108,28 @@ func (q *QaService) PostAnswer(ctx context.Context, answer *Answer) error {
 	if answer.QuestionID == 0 {
 		return errors.New("问题不存在")
 	}
-	question := &Question{ID: answer.QuestionID}
-	if err := q.ormDB.WithContext(ctx).First(question).Error; err != nil {
+	// 必须使用事务
+	err := q.ormDB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		question := &Question{ID: answer.QuestionID}
+		// 获取问题
+		if err := tx.First(question).Error; err != nil {
+			return err
+		}
+		// 增加回答
+		if err := tx.Create(answer).Error; err != nil {
+			return err
+		}
+		// 问题回答数量+1
+		question.AnswerNum = question.AnswerNum + 1
+		if err := tx.Save(question).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
 		return err
 	}
-	if err := q.ormDB.WithContext(ctx).Create(answer).Error; err != nil {
-		return err
-	}
-	question.AnswerNum = question.AnswerNum + 1
-	if err := q.ormDB.WithContext(ctx).Save(question).Error; err != nil {
-		return err
-	}
+
 	return nil
 }
 
@@ -160,7 +197,9 @@ func (q *QaService) AnswersLoadAuthor(ctx context.Context, answers *[]*Answer) e
 	if len(ids) == 0 {
 		return nil
 	}
-	if err := q.ormDB.WithContext(ctx).Preload("Author").Find(answers, ids).Error; err != nil {
+
+	// 使用PreLoad的机制，获取Create方法
+	if err := q.ormDB.WithContext(ctx).Preload("Author").Order("created_at desc").Find(answers, ids).Error; err != nil {
 		return err
 	}
 	return nil

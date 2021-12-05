@@ -76,7 +76,7 @@ type Answer struct {
 	CreatedAt  time.Time      `gorm:"column:created_at;autoCreateTime;comment:创建时间"`
 	UpdatedAt  time.Time      `gorm:"column:updated_at;autoUpdateTime;autoCreateTime;<-:false;comment:更新时间"`
 	DeletedAt  gorm.DeletedAt `gorm:"index"`
-	Author     *user.User     `gorm:"foreignKey:AuthorID"`
+	Author     *user.User     `gorm:"foreignKey:ID;references:author_id"`
 	Question   *Question      `gorm:"foreignKey:QuestionID"`
 }
 

@@ -34,7 +34,7 @@ func (api *QAApi) AnswerDelete(c *gin.Context) {
 		return
 	}
 
-	if err := qaService.DeleteQuestion(c, id); err != nil {
+	if err := qaService.DeleteAnswer(c, id); err != nil {
 		c.ISetStatus(500).IText(err.Error())
 		return
 	}
